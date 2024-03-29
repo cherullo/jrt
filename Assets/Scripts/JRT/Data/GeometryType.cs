@@ -3,7 +3,8 @@ namespace JRT.Data
 {
     public enum GeometryType
     {
-        Box = 0,
-        Sphere = 1
+        Undefined = 0,
+        Box = 1,
+        Sphere = 2
     }
 }

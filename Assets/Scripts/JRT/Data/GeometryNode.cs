@@ -7,7 +7,7 @@ namespace JRT.Data
         public GeometryType Type;
 
         public AABB Bounds;
-        public float4x4 worldToLocal;
-        public float4x4 localToWorld;
+        public float4x4 WorldToLocal;
+        public float4x4 LocalToWorld;
     }
 }

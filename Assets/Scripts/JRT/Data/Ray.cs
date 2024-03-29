@@ -4,33 +4,34 @@ namespace JRT.Data
 {
     public struct Ray
     {
-        public float4 start;
-        public float4 direction;
+        public float4 Start;
+        public float4 Direction;
 
         public Ray(float4 start, float4 direction)
         {
-            this.start = start;
-            this.direction = direction;
-        }
-
-        public bool Intersects(AABB aabb)
-        {
-            return false;
-        }
-
-        public bool Intersects(GeometryNode node)
-        {
-            return Intersects(node.Bounds);
+            Start = start;
+            Direction = direction;
         }
 
         public Ray TransformToLocal(GeometryNode node)
         {
-            return this;
+            return Transform(node.WorldToLocal);
         }
 
         public Ray TransformToWorld(GeometryNode node)
         {
-            return this;
+            return Transform(node.LocalToWorld);
+        }
+
+        private Ray Transform(float4x4 matrix)
+        {
+            float4 newDirection = math.mul(matrix, Direction);
+            newDirection.xyz = math.normalize(newDirection.xyz);
+
+            return new Ray(
+                math.mul(matrix, Start),
+                newDirection
+            );
         }
     }
 }

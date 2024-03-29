@@ -20,6 +20,7 @@ namespace JRT
             _height = Screen.height;
 
             _texture = new Texture2D(_width, _height, TextureFormat.RGBAFloat, false, true);
+            _camera.cullingMask = 0;
         }
 
         private void OnDestroy()
