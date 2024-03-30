@@ -32,6 +32,16 @@ namespace JRT.Data
                 math.mul(matrix, Start),
                 newDirection
             );
+
+            //float4 newStart = math.mul(matrix, Start);
+            //float4 newDirection = math.mul(matrix, Start + Direction);
+            //newDirection -= newStart;
+            //newDirection.xyz = math.normalize(newDirection.xyz);
+
+            //return new Ray(
+            //    newStart,
+            //    newDirection
+            //);
         }
     }
 }

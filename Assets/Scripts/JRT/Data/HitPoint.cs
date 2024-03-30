@@ -15,9 +15,20 @@ namespace JRT.Data
             FrontHit = frontHit;
         }
 
+        public HitPoint TransformToWorld(GeometryNode node)
+        {
+            return new HitPoint(
+                math.mul(node.LocalToWorld, Point),
+                math.mul(Normal, node.WorldToLocal),  // transpose of the inverse
+                FrontHit
+            );
+        }
+
         public bool IsValid()
         {
             return Normal.Equals(float4.zero);
         }
+
+        public static HitPoint Invalid => new HitPoint(); 
     }
 }

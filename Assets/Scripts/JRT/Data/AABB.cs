@@ -50,11 +50,14 @@ namespace JRT.Data
             Max = new(max, max, max, 1.0f);
         }
 
-        public bool IsIntersectedBy(in Ray ray)
+        public bool IsIntersectedBy(in Ray ray, out HitPoint hitPoint)
         {
             // Start is inside the AABB
             if ((Min < ray.Start).Equals(ray.Start < Max))
+            {
+                hitPoint = new HitPoint(ray.Start, ray.Direction, false);
                 return true;
+            }
 
             for (int i = 0; i < Faces.Length; i++)
             {
@@ -66,7 +69,7 @@ namespace JRT.Data
                 int2 face = Faces[i];
                 float4 firstCorner = GetCorner(face.x);
                 Plane plane = new Plane(firstCorner, normal);
-                if (plane.IsIntersectedBy(ray, out HitPoint hitPoint) == false)
+                if (plane.IsIntersectedBy(ray, out hitPoint) == false)
                     continue;
 
                 float4 secondCorner = GetCorner(face.y);
@@ -77,6 +80,7 @@ namespace JRT.Data
                     return true;
             }
 
+            hitPoint = HitPoint.Invalid;
             return false;
         }
             

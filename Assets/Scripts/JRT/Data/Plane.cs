@@ -34,7 +34,7 @@ namespace JRT.Data
             float denom = math.dot(ray.Direction, Normal);
             if (math.abs(denom) < math.EPSILON)
             {
-                hitPoint = new HitPoint();
+                hitPoint = HitPoint.Invalid;
                 return false;
             }
 
@@ -42,7 +42,7 @@ namespace JRT.Data
 
             if (t < 0)
             {
-                hitPoint = new HitPoint();
+                hitPoint = HitPoint.Invalid;
                 return false;
             }
 

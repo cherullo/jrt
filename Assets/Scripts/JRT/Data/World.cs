@@ -16,11 +16,13 @@ namespace JRT.Data
             {
                 GeometryNode node = Nodes[i];
 
-                if (node.Bounds.IsIntersectedBy(ray) == false)
+                if (node.Bounds.IsIntersectedBy(ray, out hitPoint) == false)
+                    continue;
+
+                if (node.IsIntersectedBy(ray, out hitPoint) == false)
                     continue;
                 
                 hitNode = node;
-                    
                 return true;
             }
 
