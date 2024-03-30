@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 using JRT.Data;
 using JRT.World;
@@ -22,6 +23,7 @@ namespace JRT.Renderer
         private WorldBuilder _worldBuilder;
 
         private List<(RenderBlockJob, JobHandle)> _jobs;
+        private Stopwatch _stopwatch = new Stopwatch();
 
         void Start()
         {
@@ -36,7 +38,13 @@ namespace JRT.Renderer
             _jobs = _ScheduleJobs(blockWidth, blockHeight, film, world);
             JobHandle.ScheduleBatchedJobs();
 
+            Debug.Log("Starting render");
+            Debug.Log($"Resolution: {film.Width}x{film.Height}");
+            Debug.Log($"Nodes: {world.Nodes.Length}");
+            Debug.Log($"Block size: {blockWidth}x{blockHeight}");
             Debug.Log($"Scheduled {_jobs.Count} jobs.");
+            _stopwatch.Reset();
+            _stopwatch.Start();
         }
 
         private List<(RenderBlockJob, JobHandle)> _ScheduleJobs(int blockWidth, int blockHeight, Film film, Data.World world)
@@ -96,8 +104,6 @@ namespace JRT.Renderer
 
                 handle.Complete();
 
-                Debug.Log("Job Finished");
-
                 for (int pixelIndex = 0; pixelIndex < job.Pixels.Length; pixelIndex++)
                 {
                     int2 pixel = job.Pixels[pixelIndex];
@@ -112,6 +118,12 @@ namespace JRT.Renderer
                 _jobs[jobIndex] = _jobs[lastIndex];
                 _jobs.RemoveAt(lastIndex);
                 jobIndex--;
+            }
+
+            if (_jobs.Count == 0)
+            {
+                _stopwatch.Stop();
+                Debug.Log($"Rendering finished after {_stopwatch.Elapsed.TotalSeconds}s");
             }
         }
     }
