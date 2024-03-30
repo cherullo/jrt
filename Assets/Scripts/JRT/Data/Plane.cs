@@ -38,7 +38,7 @@ namespace JRT.Data
                 return false;
             }
 
-            float t = - math.dot(Point - ray.Start, Normal) / denom;
+            float t = math.dot(Point - ray.Start, Normal) / denom;
 
             if (t < 0)
             {

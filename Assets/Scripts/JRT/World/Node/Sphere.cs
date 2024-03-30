@@ -2,9 +2,9 @@ using JRT.Data;
 
 namespace JRT.World.Node
 {
-    public class Sphere : BaseNode
+    public class Sphere : BaseGeometryNode
     {
-        public override GeometryNode GetData()
+        public override GeometryNode GetNodeData()
         {
             GeometryNode ret = GetBaseData();
 

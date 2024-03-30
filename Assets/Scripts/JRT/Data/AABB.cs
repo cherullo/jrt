@@ -4,7 +4,7 @@ namespace JRT.Data
 {
     public struct AABB
     {
-        private static bool3[] Corners = new bool3[]
+        private static readonly bool3[] Corners = new bool3[]
         {
             new bool3(false, false, false),
             new bool3(true, false, false),
@@ -16,7 +16,7 @@ namespace JRT.Data
             new bool3(true, true, true),
         };
 
-        private static int2[] Faces = new int2[] 
+        private static readonly int2[] Faces = new int2[]
         {
             new int2(1, 7), // X+
             new int2(0, 6), // X-
@@ -26,7 +26,7 @@ namespace JRT.Data
             new int2(0, 3), // Z-
         };
 
-        private static float4[] Normals = new float4[] 
+        private static readonly float4[] Normals = new float4[] 
         {
             new(1,  0,  0, 0),
             new(-1, 0,  0, 0),
@@ -65,7 +65,7 @@ namespace JRT.Data
 
                 int2 face = Faces[i];
                 float4 firstCorner = GetCorner(face.x);
-                Plane plane = new Plane(normal, firstCorner);
+                Plane plane = new Plane(firstCorner, normal);
                 if (plane.IsIntersectedBy(ray, out HitPoint hitPoint) == false)
                     continue;
 
@@ -73,7 +73,7 @@ namespace JRT.Data
                 bool4 normalPlane = (normal != 0.0f);
 
                 bool4 hitInsideFace = normalPlane | ((firstCorner < hitPoint.Point) & (hitPoint.Point < secondCorner));
-                if (hitInsideFace.Equals(new bool4(true)) == true)
+                if (hitInsideFace.xyz.Equals(new bool3(true)) == true)
                     return true;
             }
 

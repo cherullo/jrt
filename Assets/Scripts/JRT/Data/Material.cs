@@ -4,6 +4,6 @@ namespace JRT.Data
 {
     public struct Material
     {
-        float3 Color;
+        public float3 Color;
     }
 }

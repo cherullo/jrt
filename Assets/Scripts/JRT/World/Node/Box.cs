@@ -2,9 +2,9 @@
 
 namespace JRT.World.Node
 {
-    public class Box : BaseNode
+    public class Box : BaseGeometryNode
     {
-        public override GeometryNode GetData()
+        public override GeometryNode GetNodeData()
         {
             GeometryNode ret = GetBaseData();
 

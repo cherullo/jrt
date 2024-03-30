@@ -5,6 +5,6 @@ namespace JRT.World
     public interface IGeometry 
     {
         GeometryType GetGeometryType();
-        GeometryNode GetData();
+        GeometryNode GetNodeData();
     }
 }
