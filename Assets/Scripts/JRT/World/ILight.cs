@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using JRT.Data;
 
 namespace JRT.World
 {
     public interface ILight 
     {
-        
+        LightNode GetNodeData();
     }
 }

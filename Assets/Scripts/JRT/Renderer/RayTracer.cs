@@ -40,7 +40,8 @@ namespace JRT.Renderer
 
             Debug.Log("Starting render");
             Debug.Log($"Resolution: {film.Width}x{film.Height}");
-            Debug.Log($"Nodes: {world.Nodes.Length}");
+            Debug.Log($"Geometry Nodes: {world.Geometries.Length}");
+            Debug.Log($"Light Nodes: {world.Lights.Length}");
             Debug.Log($"Block size: {blockWidth}x{blockHeight}");
             Debug.Log($"Scheduled {_jobs.Count} jobs.");
             _stopwatch.Reset();

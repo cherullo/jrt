@@ -1,4 +1,5 @@
 using JRT.Data;
+using JRT.World.Light;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace JRT.World.Node
     public abstract class BaseGeometryNode : MonoBehaviour, IGeometry
     {
         public float3 Color;
+
+        public BaseLightNode Light;
 
         public abstract GeometryType GetGeometryType();
 

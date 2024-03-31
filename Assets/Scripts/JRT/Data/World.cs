@@ -6,7 +6,10 @@ namespace JRT.Data
     public struct World 
     {
         [ReadOnly]
-        public NativeArray<GeometryNode> Nodes;
+        public NativeArray<GeometryNode> Geometries;
+
+        [ReadOnly]
+        public NativeArray<LightNode> Lights;
 
         // TODO: Return geometryNode.Index
         public bool TraceRay(Ray ray, out GeometryNode hitNode, out HitPoint hitPoint)
@@ -15,9 +18,9 @@ namespace JRT.Data
             hitNode = GeometryNode.Invalid;
             hitPoint = HitPoint.Invalid;
 
-            for (int i = 0; i < Nodes.Length; i++)
+            for (int i = 0; i < Geometries.Length; i++)
             {
-                GeometryNode node = Nodes[i];
+                GeometryNode node = Geometries[i];
 
                 if (node.Bounds.IsIntersectedBy(ray, out _) == false)
                     continue;

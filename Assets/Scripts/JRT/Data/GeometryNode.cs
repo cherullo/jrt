@@ -3,10 +3,11 @@ using Unity.Mathematics;
 
 namespace JRT.Data
 {
-    public struct GeometryNode 
+    public struct GeometryNode
     {
         public int Index;
         public GeometryType Type;
+        public int LightIndex;
 
         public AABB Bounds;
         public float4x4 WorldToLocal;
@@ -17,6 +18,11 @@ namespace JRT.Data
         public bool IsValid()
         {
             return Type != GeometryType.Undefined;
+        }
+
+        public bool IsLightGeometry()
+        {
+            return IsValid() && (LightIndex != -1);
         }
 
         public bool IsIntersectedBy(Ray ray, out HitPoint hitPoint)
@@ -31,11 +37,11 @@ namespace JRT.Data
                     hitPoint = HitPoint.Invalid;
                     result = false;
                     break;
-                    
+
                 case GeometryType.Box:
                     result = new AABB(-0.5f, 0.5f).IsIntersectedBy(localRay, out hitPoint);
                     break;
-                    
+
                 case GeometryType.Sphere:
                     result = _IntersectOriginCenteredSphere(0.5f, localRay, out hitPoint);
                     break;
@@ -90,6 +96,13 @@ namespace JRT.Data
             }
         }
 
-        public static GeometryNode Invalid => new GeometryNode();
+        public static GeometryNode Invalid {
+            get
+            {
+                var ret = new GeometryNode();
+                ret.LightIndex = -1;
+                return ret;
+            }
+        }
     }
 }
