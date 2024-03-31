@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Mathematics;
 
@@ -11,11 +12,40 @@ namespace JRT.Data
         [ReadOnly]
         public NativeArray<LightNode> Lights;
 
-        // TODO: Return geometryNode.Index
-        public bool TraceRay(Ray ray, out GeometryNode hitNode, out HitPoint hitPoint)
+        public float3 TraceRay(Ray ray) 
+        {
+            int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
+
+            if (hitIndex == -1)
+                return CalculateMissColor(ray);
+
+            if (Geometries[hitIndex].IsLightGeometry() == true)
+            {
+                int lightIndex = Geometries[hitIndex].LightIndex;
+                return CalculateDirectLightColor(ray, hitPoint, lightIndex);
+            }
+
+            return Geometries[hitIndex].Material.CalculateColor(this, ray, hitPoint);
+        }
+
+        private float3 CalculateDirectLightColor(Ray ray, HitPoint hitPoint, int lightIndex)
+        {
+            float distance = math.length(ray.Start - hitPoint.Point);
+
+            LightNode light = Lights[lightIndex];
+
+            return light.Color.xyz * (light.Power / (distance));
+        }
+
+        private float3 CalculateMissColor(Ray ray)
+        {
+            return float3.zero;
+        }
+
+        public int ComputeIntersection(Ray ray, out HitPoint hitPoint)
         {
             float lastDistance = float.MaxValue;
-            hitNode = GeometryNode.Invalid;
+            int hitNodeIndex = -1;
             hitPoint = HitPoint.Invalid;
 
             for (int i = 0; i < Geometries.Length; i++)
@@ -29,15 +59,16 @@ namespace JRT.Data
                     continue;
 
                 float distance = math.lengthsq(ray.Start - tempHitPoint.Point);
-                if (distance < lastDistance)
+                // Avoid self intersection
+                if ((0.001f < distance) && (distance < lastDistance))
                 {
                     lastDistance = distance;
-                    hitNode = node;
+                    hitNodeIndex = i;
                     hitPoint = tempHitPoint;
                 }
             }
 
-            return hitPoint.IsValid();
+            return hitNodeIndex;
         }
     }
 }

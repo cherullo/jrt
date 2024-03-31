@@ -31,14 +31,7 @@ namespace JRT.Renderer
         {
             Ray ray = Film.GenerateRay(pixel);
 
-            if (World.TraceRay(ray, out GeometryNode node, out HitPoint point) == true)
-            {
-                return node.Material.Color;
-            }
-            else
-            {
-                return new float3(0);
-            }
+            return World.TraceRay(ray);
         }
     }
 }
