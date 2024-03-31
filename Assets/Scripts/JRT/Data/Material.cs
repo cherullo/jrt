@@ -19,11 +19,10 @@ namespace JRT.Data
                 LightNode light = world.Lights[lightIndex];
                 float L = light.CalculateRadiance(world, hitPoint.Point, out float4 pointToLightDir);
 
-                color += DiffuseColor * L * math.dot(hitPoint.Normal, pointToLightDir);
-
                 float3 reflect = math.reflect(-pointToLightDir.xyz, hitPoint.Normal.xyz);
 
-                color += SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess);
+                color += L * (DiffuseColor * math.dot(hitPoint.Normal, pointToLightDir)
+                              + SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess));
             }
 
             return color;
