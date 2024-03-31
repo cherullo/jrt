@@ -26,9 +26,9 @@ namespace JRT.Data
 
         public bool IsValid()
         {
-            return Normal.Equals(float4.zero);
+            return !Normal.Equals(float4.zero);
         }
 
-        public static HitPoint Invalid => new HitPoint(); 
+        public static HitPoint Invalid => new HitPoint();
     }
 }

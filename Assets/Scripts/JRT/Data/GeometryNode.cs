@@ -5,6 +5,7 @@ namespace JRT.Data
 {
     public struct GeometryNode 
     {
+        public int Index;
         public GeometryType Type;
 
         public AABB Bounds;
@@ -88,5 +89,7 @@ namespace JRT.Data
                 return true;
             }
         }
+
+        public static GeometryNode Invalid => new GeometryNode();
     }
 }
