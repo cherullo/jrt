@@ -91,13 +91,21 @@ namespace JRT.Renderer
             return new NativeArray<int2>(ret, Allocator.Persistent);
         }
 
+        private static int2[] tempPixels;
+        private static float3[] tempColors;
+
         void Update()
         {
             if ((_jobs == null) || (_jobs.Count == 0))
                 return;
 
+            Stopwatch sw = Stopwatch.StartNew();
+
             for (int jobIndex = 0; jobIndex < _jobs.Count; jobIndex++)
             {
+                if (sw.Elapsed.TotalMilliseconds > 33.0f)
+                    break;
+
                 (RenderBlockJob job, JobHandle handle) = _jobs[jobIndex];
 
                 if (handle.IsCompleted == false)
@@ -105,11 +113,21 @@ namespace JRT.Renderer
 
                 handle.Complete();
 
-                for (int pixelIndex = 0; pixelIndex < job.Pixels.Length; pixelIndex++)
+                int numPixels = job.Pixels.Length;
+                if ((tempPixels == null) || (tempPixels.Length != numPixels))
                 {
-                    int2 pixel = job.Pixels[pixelIndex];
-                    float3 outputColor = job.OutputColors[pixelIndex];
-                    _film.SetPixel(pixel.x, pixel.y, new Color(outputColor.x, outputColor.y, outputColor.z));
+                    tempPixels = new int2[numPixels];
+                    tempColors = new float3[numPixels];
+                }
+
+                job.Pixels.CopyTo(tempPixels);
+                job.OutputColors.CopyTo(tempColors);
+
+                for (int pixelIndex = 0; pixelIndex < numPixels; pixelIndex++)
+                {
+                    int2 pixel = tempPixels[pixelIndex];
+                    float3 outputColor = tempColors[pixelIndex];
+                    _film.SetPixel(pixel.x, pixel.y, outputColor);
                 }
 
                 job.OutputColors.Dispose();

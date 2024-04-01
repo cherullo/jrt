@@ -1,5 +1,6 @@
 using JRT.Data;
 using System;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ namespace JRT
 
         private bool _applyPending = false;
 
+        private float4[] _colors;
+
         private void Awake()
         {
             _camera = GetComponent<Camera>();
@@ -29,6 +32,8 @@ namespace JRT
             _texture = new Texture2D(Width, Height, TextureFormat.RGBAFloat, false, true);
             _texture.wrapMode = TextureWrapMode.Clamp;
             _texture.Apply();
+
+            _colors = new float4[Width * Height];
 
             _camera.cullingMask = 0;
         }
@@ -57,7 +62,8 @@ namespace JRT
             if (_applyPending == true)
             {
                 _applyPending = false;
-                _texture.Apply();
+                _texture.SetPixelData(_colors, 0);
+                _texture.Apply(false);
             }
 
             Graphics.Blit(_texture, destination);
@@ -81,6 +87,12 @@ namespace JRT
         public void SetPixel(int x, int y, Color color)
         {
             _texture.SetPixel(x, y, color);
+            _applyPending = true;
+        }
+
+        public void SetPixel(int x, int y, float3 outputColor)
+        {
+            _colors[x + y * Width] = new float4(outputColor, 1.0f);
             _applyPending = true;
         }
     }
