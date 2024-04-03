@@ -22,8 +22,8 @@ namespace JRT.Editor.World.Node
                 UnityEngine.Renderer renderer = target.GetComponent<UnityEngine.Renderer>();
                 if (renderer != null)
                 {
-                    var color = box.Color;
-                    renderer.material.color = new Color(color.x, color.y, color.z);
+                    var color = box.DiffuseColor;
+                    renderer.material.color = color;
                 }
             }
         }

@@ -7,8 +7,9 @@ namespace JRT.World.Node
 {
     public abstract class BaseGeometryNode : MonoBehaviour, IGeometry
     {
-        public float3 Color = 1.0f;
-        public float3 SpecularColor = 1.0f;
+        public Color DiffuseColor = Color.white;
+        public Color SpecularColor = Color.white;
+        public Color AmbientColor = Color.white;
         public float Shininess = 1.0f;
 
         public BaseLightNode Light;
@@ -26,9 +27,12 @@ namespace JRT.World.Node
             ret.Type = GetGeometryType();
             
             ret.Material = new Data.Material();
-            ret.Material.DiffuseColor = Color;
-            ret.Material.SpecularColor = SpecularColor;
+            ret.Material.DiffuseColor = DiffuseColor.ToFloat3();
+            ret.Material.SpecularColor = SpecularColor.ToFloat3();
+            ret.Material.AmbientColor = AmbientColor.ToFloat3();
             ret.Material.Shininess = Shininess;
+
+            Debug.Log($"Diffuse {DiffuseColor}");
 
             return ret;
         }

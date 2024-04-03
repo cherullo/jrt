@@ -11,12 +11,16 @@ namespace JRT.World
 {
     public class WorldBuilder : MonoBehaviour
     {
+        [SerializeField]
+        private Color _ambientLight;
+
         private NativeArray<GeometryNode> _geometryNodes;
         private NativeArray<LightNode> _lightNodes;
 
         public Data.World BuildWorld()
         {
             Data.World ret = new Data.World();
+            ret.AmbientLight = _ambientLight.ToFloat3();
 
             if ((_lightNodes.IsCreated == true) || (_geometryNodes.IsCreated == true))
                 OnDestroy();

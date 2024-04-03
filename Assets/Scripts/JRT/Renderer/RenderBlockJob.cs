@@ -16,7 +16,7 @@ namespace JRT.Renderer
         public NativeArray<int2> Pixels;
 
         [WriteOnly]
-        public NativeArray<float3> OutputColors;
+        public NativeArray<UnityEngine.Color32> OutputColors;
 
         [BurstCompile]
         public void Execute()
@@ -27,11 +27,19 @@ namespace JRT.Renderer
             }
         }
 
-        float3 CalculatePixelColor(int2 pixel)
+        UnityEngine.Color32 CalculatePixelColor(int2 pixel)
         {
             Ray ray = Film.GenerateRay(pixel);
 
-            return World.TraceRay(ray);
+            float3 color = World.TraceRay(ray);
+
+            int3 intColor = (int3) math.round(math.clamp(color, 0.0f, 1.0f) * 255);
+
+            return new UnityEngine.Color32(
+                (byte) intColor.x,
+                (byte) intColor.y,
+                (byte) intColor.z,
+                255);
         }
     }
 }

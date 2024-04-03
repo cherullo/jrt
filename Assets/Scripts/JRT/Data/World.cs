@@ -6,6 +6,8 @@ namespace JRT.Data
 {
     public struct World 
     {
+        public float3 AmbientLight;
+
         [ReadOnly]
         public NativeArray<GeometryNode> Geometries;
 
@@ -34,7 +36,7 @@ namespace JRT.Data
 
             LightNode light = Lights[lightIndex];
 
-            return light.Color.xyz * (light.Power / (distance));
+            return  AmbientLight + light.Color * (light.Power / (distance));
         }
 
         private float3 CalculateMissColor(Ray ray)
@@ -52,8 +54,8 @@ namespace JRT.Data
             {
                 GeometryNode node = Geometries[i];
 
-                if (node.Bounds.IsIntersectedBy(ray, out _) == false)
-                    continue;
+                //if (node.Bounds.IsIntersectedBy(ray, out _) == false)
+                //    continue;
 
                 if (node.IsIntersectedBy(ray, out HitPoint tempHitPoint) == false)
                     continue;

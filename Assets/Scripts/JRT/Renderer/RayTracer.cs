@@ -66,7 +66,7 @@ namespace JRT.Renderer
                     job.World = world;
                     job.Film = film;
                     job.Pixels = _GeneratePixels(x, y, actualBlockWidth, actualBlockHeight);
-                    job.OutputColors = new NativeArray<float3>(blockPixelCount, Allocator.Persistent);
+                    job.OutputColors = new NativeArray<Color32>(blockPixelCount, Allocator.Persistent);
 
                     ret.Add((job, job.Schedule()));
                 }
@@ -92,7 +92,7 @@ namespace JRT.Renderer
         }
 
         private static int2[] tempPixels;
-        private static float3[] tempColors;
+        private static Color32[] tempColors;
 
         void Update()
         {
@@ -117,7 +117,7 @@ namespace JRT.Renderer
                 if ((tempPixels == null) || (tempPixels.Length != numPixels))
                 {
                     tempPixels = new int2[numPixels];
-                    tempColors = new float3[numPixels];
+                    tempColors = new Color32[numPixels];
                 }
 
                 job.Pixels.CopyTo(tempPixels);
@@ -126,7 +126,7 @@ namespace JRT.Renderer
                 for (int pixelIndex = 0; pixelIndex < numPixels; pixelIndex++)
                 {
                     int2 pixel = tempPixels[pixelIndex];
-                    float3 outputColor = tempColors[pixelIndex];
+                    Color32 outputColor = tempColors[pixelIndex];
                     _film.SetPixel(pixel.x, pixel.y, outputColor);
                 }
 

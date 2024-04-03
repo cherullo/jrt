@@ -9,7 +9,7 @@ namespace JRT.Data
         public LightType Type;
 
         public float Power;
-        public float4 Color;
+        public float3 Color;
         public float4 Position;
 
         public bool IsValid()
@@ -17,7 +17,7 @@ namespace JRT.Data
             return Type != LightType.Undefined;
         }
 
-        public float CalculateRadiance(World world, float4 point, out float4 pointToLightDir)
+        public float3 CalculateRadiance(World world, float4 point, out float4 pointToLightDir)
         {
             float4 pointToLight = Position - point;
             float distance = math.length(pointToLight.xyz);
@@ -26,8 +26,10 @@ namespace JRT.Data
             Ray toLight = new Ray(point, pointToLight);
             int hitIndex = world.ComputeIntersection(toLight, out HitPoint auxHit);
 
+            // TODO: Check if geometry hit is behind light.
+
             if ((hitIndex == -1) || (world.Geometries[hitIndex].LightIndex == Index))
-                return Power / (distance * distance);
+                return Color * (Power / (distance));
             else
                 return 0.0f;
         }
