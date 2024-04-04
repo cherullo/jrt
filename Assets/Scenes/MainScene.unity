@@ -1243,7 +1243,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133ae5f9c123f748bb73cd7f4ea5d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resolutionScale: 1
+  _resolutionScale: 0.2
+  _multiSamplingType: 0
+  _sampleCount: 16
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

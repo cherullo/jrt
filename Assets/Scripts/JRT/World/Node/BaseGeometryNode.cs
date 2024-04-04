@@ -32,8 +32,6 @@ namespace JRT.World.Node
             ret.Material.AmbientColor = AmbientColor.ToFloat3();
             ret.Material.Shininess = Shininess;
 
-            Debug.Log($"Diffuse {DiffuseColor}");
-
             return ret;
         }
     }

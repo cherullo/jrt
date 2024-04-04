@@ -35,17 +35,22 @@ namespace JRT.Renderer
             Data.World world = worldBuilder.BuildWorld();
             Data.Film film = filmAdapter.GetFilmData();
 
+            _stopwatch.Reset();
+            _stopwatch.Start();
+
             _jobs = _ScheduleJobs(blockWidth, blockHeight, film, world);
-            JobHandle.ScheduleBatchedJobs();
 
             Debug.Log("Starting render");
             Debug.Log($"Resolution: {film.Width}x{film.Height}");
+            Debug.Log($"Sampling: {film.MultiSamplingType} ({filmAdapter.SampleCount})");
             Debug.Log($"Geometry Nodes: {world.Geometries.Length}");
             Debug.Log($"Light Nodes: {world.Lights.Length}");
             Debug.Log($"Block size: {blockWidth}x{blockHeight}");
             Debug.Log($"Scheduled {_jobs.Count} jobs.");
-            _stopwatch.Reset();
-            _stopwatch.Start();
+
+            Debug.Log($"Setup finished after {_stopwatch.Elapsed.TotalSeconds}s");
+            _stopwatch.Restart();
+            JobHandle.ScheduleBatchedJobs();
         }
 
         private List<(RenderBlockJob, JobHandle)> _ScheduleJobs(int blockWidth, int blockHeight, Film film, Data.World world)
@@ -65,6 +70,7 @@ namespace JRT.Renderer
                     RenderBlockJob job = new RenderBlockJob();
                     job.World = world;
                     job.Film = film;
+                    job.Film.SamplingPoints = _film.GetSamplingPoints();
                     job.Pixels = _GeneratePixels(x, y, actualBlockWidth, actualBlockHeight);
                     job.OutputColors = new NativeArray<Color32>(blockPixelCount, Allocator.Persistent);
 
@@ -132,6 +138,7 @@ namespace JRT.Renderer
 
                 job.OutputColors.Dispose();
                 job.Pixels.Dispose();
+                job.Film.SamplingPoints.Dispose();
 
                 int lastIndex = _jobs.Count - 1;
                 _jobs[jobIndex] = _jobs[lastIndex];

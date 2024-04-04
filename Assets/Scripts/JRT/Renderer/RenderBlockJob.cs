@@ -21,6 +21,8 @@ namespace JRT.Renderer
         [BurstCompile]
         public void Execute()
         {
+            Film.Initialize();
+
             for (int i = 0; i < Pixels.Length; i++)
             {
                 OutputColors[i] = CalculatePixelColor(Pixels[i]);
@@ -29,16 +31,23 @@ namespace JRT.Renderer
 
         UnityEngine.Color32 CalculatePixelColor(int2 pixel)
         {
-            Ray ray = Film.GenerateRay(pixel);
+            int sampleCount = Film.GetSampleCount();
 
-            float3 color = World.TraceRay(ray);
+            float3 color = 0;
+            for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+            {
 
-            int3 intColor = (int3) math.round(math.clamp(color, 0.0f, 1.0f) * 255);
+                Ray ray = Film.GenerateRay(pixel, sampleIndex);
+
+                color += World.TraceRay(ray);
+            }
+
+            int3 intColor = (int3)math.round(math.clamp(color / sampleCount, 0.0f, 1.0f) * 255);
 
             return new UnityEngine.Color32(
-                (byte) intColor.x,
-                (byte) intColor.y,
-                (byte) intColor.z,
+                (byte)intColor.x,
+                (byte)intColor.y,
+                (byte)intColor.z,
                 255);
         }
     }
