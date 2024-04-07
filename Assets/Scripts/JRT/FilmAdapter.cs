@@ -168,12 +168,12 @@ namespace JRT
         {
             float2[] ret = new float2[_sampleCount];
             int root = (int) Mathf.Sqrt(sampleCount);
-            float pitch = 1.0f / (root + 1);
+            float pitch = 1.0f / root;
 
             for (int iy = 0; iy < root; iy++)
                 for (int ix = 0; ix < root; ix++)
                 {
-                    float2 point = new float2((ix + 1) * pitch, (iy + 1) * pitch);
+                    float2 point = new float2((ix + 0.5f) * pitch, (iy + 0.5f) * pitch);
                     ret[ix + iy * root] = point;
                 }
 
