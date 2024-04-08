@@ -17,12 +17,17 @@ namespace JRT.Data
             for (int lightIndex = 0; lightIndex < world.Lights.Length; lightIndex++)
             {
                 LightNode light = world.Lights[lightIndex];
-                float3 L = light.CalculateRadiance(world, hitPoint.Point, out float4 pointToLightDir);
 
-                float3 reflect = math.reflect(-pointToLightDir.xyz, hitPoint.Normal.xyz);
+                int sampleCount = light.GetSampleCount();
+                for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+                {
+                    float3 L = light.CalculateRadiance(world, hitPoint.Point, sampleIndex, out float4 pointToLightDir);
 
-                color += L * (DiffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, pointToLightDir))
-                              + SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess));
+                    float3 reflect = math.reflect(-pointToLightDir.xyz, hitPoint.Normal.xyz);
+
+                    color += L * (DiffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, pointToLightDir))
+                                  + SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess));
+                }
             }
 
             return color;

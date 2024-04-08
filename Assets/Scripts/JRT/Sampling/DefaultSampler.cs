@@ -4,6 +4,8 @@ namespace JRT.Sampling
 {
     public class DefaultSampler : ISampler
     {
+        private DefaultSampler() { }
+
         public int SampleCount => 1;
 
         public MultiSamplingType SamplerType => MultiSamplingType.FixedPoints;
@@ -13,5 +15,7 @@ namespace JRT.Sampling
             return new float2[1] { 0.5f };
         }
 
+        private static DefaultSampler _instance = new DefaultSampler();
+        public static DefaultSampler Instance { get => _instance; }
     }
 }

@@ -46,9 +46,7 @@ namespace JRT
 
             _colors = new Color32[Width * Height];
 
-            Sampler = GetComponent<ISampler>();
-            if (Sampler == null)
-                Sampler = new DefaultSampler();
+            Sampler = GetComponent<ISampler>() ?? DefaultSampler.Instance;
         }
 
         private void OnDestroy()

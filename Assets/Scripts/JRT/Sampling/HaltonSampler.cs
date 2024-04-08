@@ -77,6 +77,8 @@ namespace JRT.Sampling
         private void OnValidate()
         {
             _sampleCount = Mathf.Max(1, _sampleCount);
+
+            _samplingPoints = null;
         }
 #endif
 

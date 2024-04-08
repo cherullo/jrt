@@ -48,6 +48,8 @@ namespace JRT.Sampling
         {
             _rows = Mathf.Max(1, _rows);
             _columns = Mathf.Max(1, _columns);
+
+            _samplingPoints = null;
         }
 #endif
     }
