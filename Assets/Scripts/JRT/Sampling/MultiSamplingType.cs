@@ -1,10 +1,9 @@
 ﻿
-namespace JRT.Data
+namespace JRT.Sampling
 {
     public enum MultiSamplingType
     {
-        SquarePattern,
-        Halton,
+        FixedPoints,
         Random
     }
 }

@@ -42,7 +42,7 @@ namespace JRT.Renderer
 
             Debug.Log("Starting render");
             Debug.Log($"Resolution: {film.Width}x{film.Height}");
-            Debug.Log($"Sampling: {film.MultiSamplingType} ({filmAdapter.SampleCount})");
+            Debug.Log($"Sampling: {filmAdapter.Sampler.SamplerType} ({filmAdapter.Sampler.GetType()}) ({filmAdapter.Sampler.SampleCount})");
             Debug.Log($"Geometry Nodes: {world.Geometries.Length}");
             Debug.Log($"Light Nodes: {world.Lights.Length}");
             Debug.Log($"Block size: {blockWidth}x{blockHeight}");

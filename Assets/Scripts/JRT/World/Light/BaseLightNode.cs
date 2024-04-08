@@ -13,7 +13,7 @@ namespace JRT.World.Light
 
         public abstract LightNode GetNodeData();
 
-        public LightNode GetBaseData()
+        protected LightNode GetBaseData()
         {
             return new LightNode()
             {

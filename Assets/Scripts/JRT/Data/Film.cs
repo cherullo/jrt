@@ -1,3 +1,4 @@
+using JRT.Sampling;
 using Unity.Collections;
 using Unity.Mathematics;
 
@@ -29,18 +30,6 @@ namespace JRT.Data
         public Ray GenerateRay(int2 pixel, int sampleIndex)
         {
             float2 sampleDelta = SamplingPoints[sampleIndex];
-
-            // TODO: Vectorize
-            //float filmHalfHeight = NearPlane * math.tan(math.radians(0.5f * FieldOfView));
-            //float filmHalfWidth = filmHalfHeight * AspectRatio;
-
-            //float pixelHeight = 2.0f * filmHalfHeight / Height;
-            //float pixelWidth = 2.0f * filmHalfWidth / Width;
-
-            //float3 direction3 = new float3(
-            //    -filmHalfWidth + (pixel.x + sampleDelta.x) * pixelWidth, 
-            //    -filmHalfHeight + (pixel.y + sampleDelta.y) * pixelHeight,
-            //    NearPlane);
 
             float3 direction3 = new float3((pixel + sampleDelta) * pixelSize - filmHalfSize, NearPlane);
 

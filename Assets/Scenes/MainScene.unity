@@ -1150,6 +1150,7 @@ GameObject:
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   - component: {fileID: 963194231}
+  - component: {fileID: 963194232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1244,8 +1245,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resolutionScale: 0.2
-  _multiSamplingType: 0
-  _sampleCount: 16
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1275,6 +1274,19 @@ MonoBehaviour:
   blockHeight: 64
   _film: {fileID: 963194229}
   _worldBuilder: {fileID: 963194230}
+--- !u!114 &963194232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd2ed87cadd180d428e3ef38e54c8c14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sampleCount: 16
 --- !u!1 &983212207
 GameObject:
   m_ObjectHideFlags: 0
