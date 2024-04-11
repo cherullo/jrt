@@ -12,7 +12,7 @@ namespace JRT.Sampling
 
         public override int SampleCount => _sampleCount;
 
-        public override MultiSamplingType Type => MultiSamplingType.Random;
+        public override MultiSamplingType Type => MultiSamplingType.FullRandom;
 
         public override float2[] GetSamplingPoints()
         {

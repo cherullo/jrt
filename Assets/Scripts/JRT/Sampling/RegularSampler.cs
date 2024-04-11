@@ -6,10 +6,10 @@ namespace JRT.Sampling
     public class RegularSampler : BaseSampler
     {
         [SerializeField]
-        private int _rows;
+        protected int _rows;
 
         [SerializeField]
-        private int _columns;
+        protected int _columns;
         
         public override int SampleCount => _rows * _columns;
 
@@ -17,7 +17,7 @@ namespace JRT.Sampling
 
         public override MultiSamplingType Type => MultiSamplingType.FixedPoints;
 
-        private float2[] _samplingPoints;
+        protected float2[] _samplingPoints;
 
         public override float2[] GetSamplingPoints()
         {

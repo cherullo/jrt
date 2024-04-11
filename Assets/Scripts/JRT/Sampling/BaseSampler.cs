@@ -21,9 +21,9 @@ namespace JRT.Sampling
 
         public abstract string Name { get; }
 
-        public Sampler GetSamplerData()
+        public virtual Sampler GetSamplerData()
         {
-            if ((Type == MultiSamplingType.FixedPoints) && (_samplingPoints.IsCreated == false))
+            if ((Type != MultiSamplingType.FullRandom) && (_samplingPoints.IsCreated == false))
                 _samplingPoints = GetSamplingPoints().ToUnsafeList();
 
             return new Sampler()

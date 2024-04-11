@@ -4,8 +4,6 @@ namespace JRT.Sampling
 {
     public class DefaultSampler : BaseSampler
     {
-        public DefaultSampler() { }
-
         public override string Name => "Center Sample";
 
         public override int SampleCount => 1;

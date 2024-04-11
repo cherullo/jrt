@@ -9,6 +9,7 @@ namespace JRT.Data
         public int SampleCount;
         public MultiSamplingType MultiSamplingType;
         public UnsafeList<float2> SamplingPoints;
+        public float2 PixelPitch; // Stratified
 
         public float2 GetSample(int index, ref RNG Random)
         {
@@ -16,9 +17,12 @@ namespace JRT.Data
             {
                 case MultiSamplingType.FixedPoints:
                     return SamplingPoints[index];
-                    
+
+                case MultiSamplingType.Stratified:
+                    return SamplingPoints[index] + PixelPitch * (Random.UnitSquare - 0.5f);
+
                 default:
-                case MultiSamplingType.Random:
+                case MultiSamplingType.FullRandom:
                     return Random.UnitSquare;
             }
         }
