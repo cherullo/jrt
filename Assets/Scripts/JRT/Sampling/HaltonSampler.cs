@@ -11,7 +11,9 @@ namespace JRT.Sampling
 
         public override int SampleCount => _sampleCount;
 
-        public override MultiSamplingType SamplerType => MultiSamplingType.FixedPoints;
+        public override string Name => "Halton Sampler";
+
+        public override MultiSamplingType Type => MultiSamplingType.FixedPoints;
 
         private float2[] _samplingPoints;
 

@@ -20,7 +20,7 @@ namespace JRT.World.Light
                 Type = GetLightType(),
                 Power = Power,
                 Color = Color.ToFloat3(),
-                Position = new float4(transform.position, 1.0f),
+                LocalToWorld = transform.localToWorldMatrix,
                 SampleArea = 1.0f
             };
         }

@@ -9,7 +9,7 @@ namespace JRT.Data
         public float3 AmbientColor;
         public float Shininess;
 
-        public float3 CalculateColor(World world, Ray ray, HitPoint hitPoint)
+        public float3 CalculateColor(ref World world, Ray ray, HitPoint hitPoint)
         {
             float3 color = AmbientColor * world.AmbientLight;
             float4 pointToEyeDir = new float4(math.normalize((ray.Start - hitPoint.Point).xyz), 0.0f);
@@ -21,7 +21,7 @@ namespace JRT.Data
                 int sampleCount = light.GetSampleCount();
                 for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
                 {
-                    float3 L = light.CalculateRadiance(world, hitPoint.Point, sampleIndex, out float4 pointToLightDir);
+                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, sampleIndex, out float4 pointToLightDir);
 
                     float3 reflect = math.reflect(-pointToLightDir.xyz, hitPoint.Normal.xyz);
 

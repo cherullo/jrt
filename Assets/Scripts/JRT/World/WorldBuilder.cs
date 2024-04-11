@@ -35,8 +35,8 @@ namespace JRT.World
 
         private void _GenerateNodes()
         {
-            var lightComponents = FindObjectsOfType<BaseLightNode>(false).ToList();//.Select(x => x.GetNodeData()).ToArray();
-            var geomComponents = FindObjectsOfType<BaseGeometryNode>(false);//.Select(x => x.GetNodeData()).ToArray();
+            var lightComponents = FindObjectsOfType<BaseLightNode>(false).ToList();
+            var geomComponents = FindObjectsOfType<BaseGeometryNode>(false);
 
             var lightNodes = lightComponents.Select((node, index) =>
             {

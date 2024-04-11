@@ -3,8 +3,6 @@ using System;
 using JRT.Data;
 using JRT.Sampling;
 
-using Unity.Collections;
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -80,10 +78,6 @@ namespace JRT
             Graphics.Blit(_texture, destination);
         }
 
-        public void Init()
-        {
-        }
-
         public Film GetFilmData()
         {
             Film ret = new Film();
@@ -95,19 +89,9 @@ namespace JRT
             ret.AspectRatio = _camera.aspect;
 
             ret.CameraLocalToWorld = transform.localToWorldMatrix;
-
-            ret.MultiSamplingType = Sampler.SamplerType;
+            ret.Sampler = Sampler.GetSamplerData();
 
             return ret;
-        }
-
-        public NativeArray<float2> GetSamplingPoints()
-        {
-            float2[] ret;
-
-            ret = Sampler.GetSamplingPoints();
-
-            return new NativeArray<float2>(ret, Allocator.Persistent);
         }
 
         public void SetPixel(int x, int y, Color32 outputColor)
@@ -118,5 +102,4 @@ namespace JRT
             _applyPending = true;
         }
     }
-
 }

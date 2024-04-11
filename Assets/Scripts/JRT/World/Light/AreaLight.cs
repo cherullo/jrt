@@ -1,7 +1,6 @@
 using JRT.Data;
 using JRT.Sampling;
-using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
+
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -9,8 +8,6 @@ namespace JRT.World.Light
 {
     public class AreaLight : BaseLightNode
     {
-        private UnsafeList<float3> _samplingPoints;
-
         public ISampler Sampler
         {
             get
@@ -29,18 +26,9 @@ namespace JRT.World.Light
         {
             LightNode node = GetBaseData();
 
-            if (_samplingPoints.IsCreated == false)
-            {
-                var temp = GenerateSamplingPoints();
-                _samplingPoints = new UnsafeList<float3>(temp.Length, AllocatorManager.Persistent);
-                for (int i = 0; i < temp.Length; i++) 
-                    _samplingPoints.AddNoResize(temp[i]);
-            }
+            node.Sampler = Sampler.GetSamplerData();
+            node.SampleArea = _CalculateLightArea() / node.Sampler.SampleCount;
 
-            node.SamplingPoints = _samplingPoints;
-            node.Direction = transform.forward;
-
-            node.SampleArea = _CalculateLightArea() / _samplingPoints.Length;
             Debug.Log($"SampleArea: {node.SampleArea}");
 
             return node;
@@ -58,7 +46,7 @@ namespace JRT.World.Light
             return Vector3.Cross(v1, v2).magnitude;
         }
 
-        public float3[] GenerateSamplingPoints()
+        public float3[] GenerateWorldSamplingPoints()
         {
             float2[] samplingPoints = Sampler.GetSamplingPoints();
             float3[] ret = new float3[samplingPoints.Length];
@@ -71,11 +59,6 @@ namespace JRT.World.Light
             }
 
             return ret;
-        }
-
-        private void OnDestroy()
-        {
-            _samplingPoints.Dispose();
         }
     }
 }

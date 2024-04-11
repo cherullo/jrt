@@ -5,6 +5,8 @@ namespace JRT.Data
 {
     public struct World 
     {
+        public RNG Random;
+
         public float3 AmbientLight;
 
         [ReadOnly]
@@ -26,7 +28,7 @@ namespace JRT.Data
                 return CalculateDirectLightColor(ray, hitPoint, lightIndex);
             }
 
-            return Geometries[hitIndex].Material.CalculateColor(this, ray, hitPoint);
+            return Geometries[hitIndex].Material.CalculateColor(ref this, ray, hitPoint);
         }
 
         private float3 CalculateDirectLightColor(Ray ray, HitPoint hitPoint, int lightIndex)
@@ -35,7 +37,7 @@ namespace JRT.Data
 
             LightNode light = Lights[lightIndex];
 
-            return  AmbientLight + light.Color * (light.Power / (distance));
+            return AmbientLight + light.Color * (light.Power / (distance));
         }
 
         private float3 CalculateMissColor(Ray ray)

@@ -1,14 +1,16 @@
-﻿using Unity.Mathematics;
+﻿using JRT.Data;
+using Unity.Mathematics;
 
 namespace JRT.Sampling
 {
     public interface ISampler
     {
-        int SampleCount { get; }
+        Sampler GetSamplerData();
 
-        MultiSamplingType SamplerType { get; }
+        string Name { get; }
+
+        MultiSamplingType Type { get; }
 
         float2[] GetSamplingPoints();
-
     }
 }

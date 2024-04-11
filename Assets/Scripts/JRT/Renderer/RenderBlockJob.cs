@@ -31,13 +31,12 @@ namespace JRT.Renderer
 
         UnityEngine.Color32 CalculatePixelColor(int2 pixel)
         {
-            int sampleCount = Film.GetSampleCount();
+            int sampleCount = Film.Sampler.SampleCount;
 
             float3 color = 0;
             for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
             {
-
-                Ray ray = Film.GenerateRay(pixel, sampleIndex);
+                Ray ray = Film.GenerateRay(ref World.Random, pixel, sampleIndex);
 
                 color += World.TraceRay(ray);
             }

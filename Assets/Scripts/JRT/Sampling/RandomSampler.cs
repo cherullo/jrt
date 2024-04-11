@@ -6,11 +6,13 @@ namespace JRT.Sampling
     public class RandomSampler : BaseSampler
     {
         [SerializeField]
-        private int _sampleCount;
+        private int _sampleCount = 1;
+
+        public override string Name => "Random Sampler";
 
         public override int SampleCount => _sampleCount;
 
-        public override MultiSamplingType SamplerType => MultiSamplingType.Random;
+        public override MultiSamplingType Type => MultiSamplingType.Random;
 
         public override float2[] GetSamplingPoints()
         {

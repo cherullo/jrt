@@ -15,7 +15,7 @@ namespace JRT.World.Light
                 return;
             
             Vector3 forward = 0.25f * light.transform.forward;
-            float3[] samplingPoints = light.GenerateSamplingPoints();
+            float3[] samplingPoints = light.GenerateWorldSamplingPoints();
 
             for (int i = 0; i < samplingPoints.Length; i++)
             {

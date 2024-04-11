@@ -42,7 +42,7 @@ namespace JRT.Renderer
 
             Debug.Log("Starting render");
             Debug.Log($"Resolution: {film.Width}x{film.Height}");
-            Debug.Log($"Sampling: {filmAdapter.Sampler.SamplerType} ({filmAdapter.Sampler.GetType()}) ({filmAdapter.Sampler.SampleCount})");
+            Debug.Log($"Ray Sampling: {filmAdapter.Sampler.Name} ({film.Sampler.SampleCount})");
             Debug.Log($"Geometry Nodes: {world.Geometries.Length}");
             Debug.Log($"Light Nodes: {world.Lights.Length}");
             Debug.Log($"Block size: {blockWidth}x{blockHeight}");
@@ -69,8 +69,8 @@ namespace JRT.Renderer
 
                     RenderBlockJob job = new RenderBlockJob();
                     job.World = world;
+                    job.World.Random.State = (uint) (x + y * blockWidth);
                     job.Film = film;
-                    job.Film.SamplingPoints = _film.GetSamplingPoints();
                     job.Pixels = _GeneratePixels(x, y, actualBlockWidth, actualBlockHeight);
                     job.OutputColors = new NativeArray<Color32>(blockPixelCount, Allocator.Persistent);
 
@@ -138,7 +138,6 @@ namespace JRT.Renderer
 
                 job.OutputColors.Dispose();
                 job.Pixels.Dispose();
-                job.Film.SamplingPoints.Dispose();
 
                 int lastIndex = _jobs.Count - 1;
                 _jobs[jobIndex] = _jobs[lastIndex];

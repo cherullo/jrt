@@ -10,10 +10,12 @@ namespace JRT.Sampling
 
         [SerializeField]
         private int _columns;
-
+        
         public override int SampleCount => _rows * _columns;
 
-        public override MultiSamplingType SamplerType => MultiSamplingType.FixedPoints;
+        public override string Name => "Regular Sampler";
+
+        public override MultiSamplingType Type => MultiSamplingType.FixedPoints;
 
         private float2[] _samplingPoints;
 

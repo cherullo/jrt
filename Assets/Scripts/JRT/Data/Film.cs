@@ -1,5 +1,3 @@
-using JRT.Sampling;
-using Unity.Collections;
 using Unity.Mathematics;
 
 namespace JRT.Data
@@ -15,21 +13,14 @@ namespace JRT.Data
         public float FieldOfView;
         public float AspectRatio;
 
-        public MultiSamplingType MultiSamplingType;
-        [ReadOnly]
-        public NativeArray<float2> SamplingPoints; // Deltas in the range (0, 1)
+        public Sampler Sampler;
 
         private float2 filmHalfSize;
         private float2 pixelSize;
 
-        public int GetSampleCount()
+        public Ray GenerateRay(ref RNG Random, int2 pixel, int sampleIndex)
         {
-            return SamplingPoints.Length;
-        }
-
-        public Ray GenerateRay(int2 pixel, int sampleIndex)
-        {
-            float2 sampleDelta = SamplingPoints[sampleIndex];
+            float2 sampleDelta = Sampler.GetSample(sampleIndex, ref Random);
 
             float3 direction3 = new float3((pixel + sampleDelta) * pixelSize - filmHalfSize, NearPlane);
 
@@ -45,11 +36,6 @@ namespace JRT.Data
 
             pixelSize.y = 2.0f * filmHalfSize.y / Height;
             pixelSize.x = 2.0f * filmHalfSize.x / Width;
-
-            if (MultiSamplingType == MultiSamplingType.Random)
-            {
-                // TODO: Initialize random points
-            }
         }
 
         public float4 CameraPosition => CameraLocalToWorld.c3;
