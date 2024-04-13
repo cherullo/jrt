@@ -26,7 +26,7 @@ namespace JRT.Data
         private Ray Transform(float4x4 matrix)
         {
             float4 newDirection = math.mul(matrix, Direction);
-            newDirection.xyz = math.normalize(newDirection.xyz);
+            //newDirection.xyz = math.normalize(newDirection.xyz);
 
             return new Ray(
                 math.mul(matrix, Start),

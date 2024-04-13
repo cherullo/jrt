@@ -47,9 +47,9 @@ namespace JRT.Data
 
         public int ComputeIntersection(Ray ray, out HitPoint hitPoint)
         {
-            float lastDistance = float.MaxValue;
             int hitNodeIndex = -1;
             hitPoint = HitPoint.Invalid;
+            hitPoint.T = float.MaxValue;
 
             for (int i = 0; i < Geometries.Length; i++)
             {
@@ -58,12 +58,9 @@ namespace JRT.Data
                 if (node.IsIntersectedBy(ray, out HitPoint tempHitPoint) == false)
                     continue;
 
-                float distance = math.lengthsq(ray.Start - tempHitPoint.Point);
-
                 // Avoid self intersection
-                if (tempHitPoint.FrontHit && (distance < lastDistance))
+                if (tempHitPoint.FrontHit && (tempHitPoint.T < hitPoint.T))
                 {
-                    lastDistance = distance;
                     hitNodeIndex = i;
                     hitPoint = tempHitPoint;
                 }

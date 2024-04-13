@@ -82,16 +82,16 @@ namespace JRT.Data
                 else
                 {
                     float4 point = ray.Start + ray.Direction * x2;
-                    float4 normal = new float4(math.normalize(point.xyz), 0.0f);
-                    hitPoint = new HitPoint(point, normal, false);
+                    float3 normal = 2.0f * point.xyz; // new float4(math.normalize(point.xyz), 0.0f);
+                    hitPoint = new HitPoint(point, normal, x2, false);
                     return true;
                 }
             }
             else
             {
                 float4 point = ray.Start + ray.Direction * x1;
-                float4 normal = new float4(math.normalize(point.xyz), 0.0f);
-                hitPoint = new HitPoint(point, normal, true);
+                float3 normal = 2.0f * point.xyz; // The same as normalization since point rests in a origin centered sphere of radius 0.5f
+                hitPoint = new HitPoint(point, normal, x1, true);
                 return true;
             }
         }

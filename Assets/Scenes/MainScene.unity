@@ -1172,8 +1172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b2584e20b1b25428d1dc7b6f082c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockWidth: 36
-  blockHeight: 36
+  blockWidth: 64
+  blockHeight: 64
   _film: {fileID: 963194229}
   _worldBuilder: {fileID: 963194230}
 --- !u!114 &963194232

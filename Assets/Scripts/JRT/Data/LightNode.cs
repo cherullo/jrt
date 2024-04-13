@@ -34,21 +34,22 @@ namespace JRT.Data
             }
         }
 
-        public float3 CalculateRadiance(ref World world, float4 point, int sampleIndex, out float4 pointToLightDir)
+        public float3 CalculateRadiance(ref World world, float4 point, int sampleIndex, out float3 pointToLightDir)
         {
             float4 samplePosition = _GetSample(ref world.Random, sampleIndex, point, out float3 lightDirection);
             float4 pointToLight = samplePosition - point;
             float distance = math.length(pointToLight.xyz);
-            pointToLightDir = new float4(pointToLight.xyz / distance, 0.0f);
+            pointToLightDir = pointToLight.xyz / distance;
 
             Ray toLight = new Ray(point, pointToLight);
             int hitIndex = world.ComputeIntersection(toLight, out HitPoint auxHit);
 
-            float lightIncidenceDecay = math.max(0.0f, math.dot(-pointToLightDir.xyz, lightDirection));
-
             // TODO: Check if geometry hit is behind light.
             if ((hitIndex == -1) || (world.Geometries[hitIndex].LightIndex == Index))
+            {
+                float lightIncidenceDecay = math.max(0.0f, math.dot(-pointToLightDir, lightDirection));
                 return Color * ((SampleArea * lightIncidenceDecay * Power) / (distance * distance));
+            }
             else
                 return 0.0f;
         }

@@ -5,28 +5,34 @@ namespace JRT.Data
     public struct HitPoint
     {
         public float4 Point;
-        public float4 Normal;
+        public float3 Normal;
+        public float T;
         public bool FrontHit;
 
-        public HitPoint(float4 point, float4 normal, bool frontHit)
+        public HitPoint(float4 point, float3 normal, float t, bool frontHit)
         {
             Point = point;
             Normal = normal;
+            T = t;
             FrontHit = frontHit;
         }
 
         public HitPoint TransformToWorld(GeometryNode node)
         {
+            // Multiply by transpose of the inverse
+            float3 transformedNormal = math.normalize(math.mul(new float4(Normal, 0.0f), node.WorldToLocal).xyz);
+
             return new HitPoint(
                 math.mul(node.LocalToWorld, Point),
-                new float4(math.normalize(math.mul(Normal, node.WorldToLocal).xyz), 0),  // transpose of the inverse
+                transformedNormal,
+                T,                
                 FrontHit
             );
         }
 
         public bool IsValid()
         {
-            return !Normal.Equals(float4.zero);
+            return !Normal.Equals(float3.zero);
         }
 
         public static HitPoint Invalid => new HitPoint();

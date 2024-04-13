@@ -21,9 +21,9 @@ namespace JRT.Data
                 int sampleCount = light.GetSampleCount();
                 for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
                 {
-                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, sampleIndex, out float4 pointToLightDir);
+                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, sampleIndex, out float3 pointToLightDir);
 
-                    float3 reflect = math.reflect(-pointToLightDir.xyz, hitPoint.Normal.xyz);
+                    float3 reflect = math.reflect(-pointToLightDir, hitPoint.Normal);
 
                     color += L * (DiffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, pointToLightDir))
                                   + SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess));
