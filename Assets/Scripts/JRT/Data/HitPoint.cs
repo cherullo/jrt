@@ -19,7 +19,7 @@ namespace JRT.Data
         {
             return new HitPoint(
                 math.mul(node.LocalToWorld, Point),
-                math.mul(Normal, node.WorldToLocal),  // transpose of the inverse
+                new float4(math.normalize(math.mul(Normal, node.WorldToLocal).xyz), 0),  // transpose of the inverse
                 FrontHit
             );
         }
