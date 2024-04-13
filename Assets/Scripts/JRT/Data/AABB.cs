@@ -52,38 +52,35 @@ namespace JRT.Data
 
         public bool IsIntersectedBy(in Ray ray, out HitPoint hitPoint)
         {
-            // Start is inside the AABB
-            if ((Min < ray.Start).Equals(ray.Start < Max))
+            float3 invDir = 1.0f / ray.Direction.xyz;
+
+            float3 t1 = (Min.xyz - ray.Start.xyz) * invDir;
+            float3 t2 = (Max.xyz - ray.Start.xyz) * invDir;
+
+            float3 m = math.min(t1, t2);
+            float3 M = math.max(t1, t2);
+
+            float tMin = math.cmax(m);
+            float tMax = math.cmin(M);
+
+            if ((tMin >= tMax) || (tMax < 0.0f))
             {
-                hitPoint = new HitPoint(ray.Start, ray.Direction, false);
-                return true;
+                hitPoint = HitPoint.Invalid;
+                return false;
             }
 
-            for (int i = 0; i < Faces.Length; i++)
-            {
-                float4 normal = Normals[i];
-                // Don't check against the back face
-                if (math.dot(normal, ray.Direction) > 0.0f)
-                    continue;
+            hitPoint.FrontHit = (tMin >= 0);
+            float t = (hitPoint.FrontHit) ? tMin : tMax;
+            hitPoint.Point = ray.Start + t * ray.Direction;
 
-                int2 face = Faces[i];
-                float4 firstCorner = GetCorner(face.x);
-                Plane plane = new Plane(firstCorner, normal);
-                if (plane.IsIntersectedBy(ray, out hitPoint) == false)
-                    continue;
+            float3 temp = 0.5f - math.abs(hitPoint.Point.xyz);
+            float plane = math.cmin(temp);
 
-                float4 secondCorner = GetCorner(face.y);
-                bool4 normalPlane = (normal != 0.0f);
+            hitPoint.Normal = new float4(math.select(0.0f, math.sign(hitPoint.Point.xyz), temp == plane), 0.0f);
 
-                bool4 hitInsideFace = normalPlane | ((firstCorner < hitPoint.Point) & (hitPoint.Point < secondCorner));
-                if (hitInsideFace.xyz.Equals(new bool3(true)) == true)
-                    return true;
-            }
-
-            hitPoint = HitPoint.Invalid;
-            return false;
+            return true;
         }
-            
+
         public AABB Transform(in float4x4 matrix)
         {
             float4 retMin = float.MaxValue;

@@ -37,7 +37,7 @@ namespace JRT.Data
 
             LightNode light = Lights[lightIndex];
 
-            return light.Color;// * (light.Power / (distance));
+            return light.Color * light.Power;// / (distance));
         }
 
         private float3 CalculateMissColor(Ray ray)
@@ -59,6 +59,7 @@ namespace JRT.Data
                     continue;
 
                 float distance = math.lengthsq(ray.Start - tempHitPoint.Point);
+
                 // Avoid self intersection
                 if (tempHitPoint.FrontHit && (distance < lastDistance))
                 {
