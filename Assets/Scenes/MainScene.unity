@@ -154,9 +154,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 0.6, g: 0.6, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &7971064
 MeshRenderer:
@@ -254,9 +256,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 0.6313726, b: 0, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &9128083
 MeshRenderer:
@@ -734,9 +738,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd043c98eadc7947a6b83fd2cda730f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 0, g: 0.5254902, b: 0.07450981, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 4
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &607540166
 MeshRenderer:
@@ -897,6 +903,102 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &808768593
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Default-Material (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance) (Instance)
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _EMISSION
+  m_InvalidKeywords: []
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Detail:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Occlusion:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaTestRef: 0.5
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EmissionScaleUI: 1
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Lightmapping: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0.99999994}
+    - _EmissionColorUI: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColorWithMapUI: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!21 &848823517
 Material:
   serializedVersion: 8
@@ -1221,9 +1323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &983212210
 MeshRenderer:
@@ -1416,9 +1520,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd043c98eadc7947a6b83fd2cda730f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 0
+  Reflectance: 0
   Light: {fileID: 961646195}
 --- !u!23 &1203468736
 MeshRenderer:
@@ -1612,9 +1718,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd043c98eadc7947a6b83fd2cda730f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 0, g: 0.5245282, b: 0.07419348, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 4
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &1260050866
 MeshRenderer:
@@ -1903,9 +2011,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 0.63109165, b: 0, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &1420468968
 MeshRenderer:
@@ -2003,9 +2113,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 0.6313726, b: 0, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &1483839579
 MeshRenderer:
@@ -2198,9 +2310,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd043c98eadc7947a6b83fd2cda730f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 0, g: 0.5254902, b: 0.07450981, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 4
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &1582742690
 MeshRenderer:
@@ -2393,9 +2507,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &1737539782
 MeshRenderer:
@@ -2633,9 +2749,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 0.8, g: 0.8, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &1942297394
 MeshRenderer:
@@ -2828,9 +2946,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 0.4, g: 0.4, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &2010528072
 MeshRenderer:
@@ -3090,9 +3210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 1
+  Reflectance: 0
   Light: {fileID: 2055922095}
 --- !u!114 &2055922095
 MonoBehaviour:
@@ -3106,7 +3228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65dbe86c41cc55d428b1c8dcdc7dc73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Power: 10
+  Power: 14
   Color: {r: 1, g: 1, b: 1, a: 0}
 --- !u!114 &2055922096
 MonoBehaviour:
@@ -3153,9 +3275,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 1
   DiffuseColor: {r: 1, g: 1, b: 1, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0.5
   Light: {fileID: 0}
 --- !u!23 &2071605406
 MeshRenderer:
@@ -3177,7 +3301,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2147453598}
+  - {fileID: 808768593}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3253,9 +3377,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78284784e86d32a40b2e3e1ab3010c3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaterialType: 0
   DiffuseColor: {r: 1, g: 0.6313726, b: 0, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 10
+  Reflectance: 0
   Light: {fileID: 0}
 --- !u!23 &2137508963
 MeshRenderer:
@@ -3322,101 +3448,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 16.602, y: 125.23, z: 11.408}
---- !u!21 &2147453598
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Default-Material (Instance) (Instance) (Instance)
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _EMISSION
-  m_InvalidKeywords: []
-  m_LightmapFlags: 1
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Detail:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DetailAlbedoMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DetailMask:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _DetailNormalMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _EmissionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MetallicGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Occlusion:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _OcclusionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ParallaxMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AlphaTestRef: 0.5
-    - _BumpScale: 1
-    - _Cutoff: 0.5
-    - _DetailNormalMapScale: 1
-    - _DstBlend: 0
-    - _EmissionScaleUI: 1
-    - _GlossMapScale: 1
-    - _Glossiness: 0.5
-    - _GlossyReflections: 1
-    - _Lightmapping: 1
-    - _Metallic: 0
-    - _Mode: 0
-    - _OcclusionStrength: 1
-    - _Parallax: 0.02
-    - _SmoothnessTextureChannel: 0
-    - _SpecularHighlights: 1
-    - _SrcBlend: 1
-    - _UVSec: 0
-    - _ZWrite: 1
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0.99999994}
-    - _EmissionColorUI: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissionColorWithMapUI: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

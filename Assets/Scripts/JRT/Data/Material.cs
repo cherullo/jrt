@@ -4,14 +4,43 @@ namespace JRT.Data
 {
     public struct Material
     {
+        public MaterialType Type;
         public float3 DiffuseColor;
         public float3 SpecularColor;
-        public float3 AmbientColor;
         public float Shininess;
+        public float Reflectance;
 
         public float3 CalculateColor(ref World world, Ray ray, HitPoint hitPoint)
         {
-            float3 color = AmbientColor * world.AmbientLight;
+            switch (Type)
+            {
+                default:
+                case MaterialType.Phong:
+                    return CalculatePhongColor(ref world, ray, hitPoint);
+                    
+                case MaterialType.ReflectivePhong:
+                    return CalculateReflectivePhongColor(ref world, ray, hitPoint);
+            }
+        }
+
+        public float3 CalculateReflectivePhongColor(ref World world, Ray ray, HitPoint hitPoint)
+        {
+            float3 pointToEyeDir = math.normalize((ray.Start - hitPoint.Point).xyz);
+            
+            float R = Reflectance + (1.0f - Reflectance) * math.pow(1.0f - math.dot(pointToEyeDir, hitPoint.Normal), 5.0f);
+
+            float3 color = (1.0f - R) * CalculatePhongColor(ref world, ray, hitPoint);
+
+            float3 reflect = math.normalize(math.reflect(-pointToEyeDir, hitPoint.Normal));
+
+            color += R * world.TraceRay(new Ray(hitPoint.Point, new float4(reflect, 0.0f)));
+
+            return color;
+        }
+
+        public float3 CalculatePhongColor(ref World world, Ray ray, HitPoint hitPoint)
+        {
+            float3 color = DiffuseColor * world.AmbientLight;
             float4 pointToEyeDir = new float4(math.normalize((ray.Start - hitPoint.Point).xyz), 0.0f);
 
             for (int lightIndex = 0; lightIndex < world.Lights.Length; lightIndex++)
