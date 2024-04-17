@@ -46,7 +46,7 @@ namespace JRT.Data
                 return false;
             }
 
-            hitPoint = new HitPoint(ray.Start + t * ray.Direction, Normal, t, denom < 0.0f);
+            hitPoint = new HitPoint(ray.Start + t * ray.Direction, Normal, t, denom < 0.0f, 0.0f);
             return true;
         }
     }

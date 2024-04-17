@@ -1,4 +1,5 @@
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 
@@ -16,6 +17,7 @@ namespace JRT.Data
 
         public Material Material;
 
+        [ReadOnly]
         public UnsafeList<Triangle> Triangles;
 
         public bool IsValid()
@@ -110,7 +112,7 @@ namespace JRT.Data
                 {
                     float4 point = ray.Start + ray.Direction * x2;
                     float3 normal = 2.0f * point.xyz; // new float4(math.normalize(point.xyz), 0.0f);
-                    hitPoint = new HitPoint(point, normal, x2, false);
+                    hitPoint = new HitPoint(point, normal, x2, false, 0.0f);
                     return true;
                 }
             }
@@ -118,7 +120,7 @@ namespace JRT.Data
             {
                 float4 point = ray.Start + ray.Direction * x1;
                 float3 normal = 2.0f * point.xyz; // The same as normalization since point rests in a origin centered sphere of radius 0.5f
-                hitPoint = new HitPoint(point, normal, x1, true);
+                hitPoint = new HitPoint(point, normal, x1, true, 0.0f);
                 return true;
             }
         }

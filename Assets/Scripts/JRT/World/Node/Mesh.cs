@@ -25,6 +25,7 @@ namespace JRT.World.Node
             int[] triangleIndexes = mesh.triangles;
             Vector3[] vertices = mesh.vertices;
             Vector3[] normals = mesh.normals;
+            Vector2[] uvs = mesh.uv;
             int triangleCount = triangleIndexes.Length / 3;
 
             _triangles = new UnsafeList<Triangle>(triangleCount, AllocatorManager.Persistent);
@@ -34,12 +35,15 @@ namespace JRT.World.Node
 
                 tri.P0 = vertices[triangleIndexes[i * 3 + 0]];
                 tri.N0 = normals[triangleIndexes[i * 3 + 0]];
-                
+                tri.Tex0 = uvs[triangleIndexes[i * 3 + 0]];
+
                 tri.P1 = vertices[triangleIndexes[i * 3 + 1]];
                 tri.N1 = normals[triangleIndexes[i * 3 + 1]];
-                
+                tri.Tex1 = uvs[triangleIndexes[i * 3 + 1]];
+
                 tri.P2 = vertices[triangleIndexes[i * 3 + 2]];
                 tri.N2 = normals[triangleIndexes[i * 3 + 2]];
+                tri.Tex2 = uvs[triangleIndexes[i * 3 + 2]];
 
                 _triangles.AddNoResize(tri);
             }

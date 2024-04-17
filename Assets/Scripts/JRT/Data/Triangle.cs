@@ -10,6 +10,9 @@ namespace JRT.Data
         public float3 N0;
         public float3 N1;
         public float3 N2;
+        public float2 Tex0;
+        public float2 Tex1;
+        public float2 Tex2;
 
         public bool IsIntersectedBy(in Ray ray, out HitPoint hitPoint)
         {
@@ -44,6 +47,7 @@ namespace JRT.Data
 
             hitPoint.Point = ray.Start + t * ray.Direction;
             hitPoint.Normal = math.normalize( (1.0f - u - v) * N0 + u * N1 + v * N2 );
+            hitPoint.TexCoords = (1.0f - u - v) * Tex0 + u * Tex1 + v * Tex2;
             hitPoint.T = t;
             return true;
         }

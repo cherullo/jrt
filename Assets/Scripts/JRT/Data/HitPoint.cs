@@ -8,13 +8,15 @@ namespace JRT.Data
         public float3 Normal;
         public float T;
         public bool FrontHit;
+        public float2 TexCoords;
 
-        public HitPoint(float4 point, float3 normal, float t, bool frontHit)
+        public HitPoint(float4 point, float3 normal, float t, bool frontHit, float2 texCoords)
         {
             Point = point;
             Normal = normal;
             T = t;
             FrontHit = frontHit;
+            TexCoords = texCoords;
         }
 
         public HitPoint TransformToWorld(GeometryNode node)
@@ -26,7 +28,8 @@ namespace JRT.Data
                 math.mul(node.LocalToWorld, Point),
                 transformedNormal,
                 T,                
-                FrontHit
+                FrontHit,
+                TexCoords
             );
         }
 

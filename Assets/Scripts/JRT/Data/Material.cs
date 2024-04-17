@@ -9,6 +9,7 @@ namespace JRT.Data
         public float3 SpecularColor;
         public float Shininess;
         public float Reflectance;
+        public Texture DiffuseTexture;
 
         public float3 CalculateColor(ref World world, Ray ray, HitPoint hitPoint)
         {
@@ -40,7 +41,8 @@ namespace JRT.Data
 
         public float3 CalculatePhongColor(ref World world, Ray ray, HitPoint hitPoint)
         {
-            float3 color = DiffuseColor * world.AmbientLight;
+            float3 diffuseColor = DiffuseColor * DiffuseTexture.SampleColor(hitPoint.TexCoords);
+            float3 color = diffuseColor * world.AmbientLight;
             float4 pointToEyeDir = new float4(math.normalize((ray.Start - hitPoint.Point).xyz), 0.0f);
 
             for (int lightIndex = 0; lightIndex < world.Lights.Length; lightIndex++)
@@ -54,7 +56,7 @@ namespace JRT.Data
 
                     float3 reflect = math.reflect(-pointToLightDir, hitPoint.Normal);
 
-                    color += L * (DiffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, pointToLightDir))
+                    color += L * (diffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, pointToLightDir))
                                   + SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess));
                 }
             }

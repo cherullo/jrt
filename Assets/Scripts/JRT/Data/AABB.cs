@@ -82,9 +82,10 @@ namespace JRT.Data
             float3 temp = 0.5f - math.abs(hitPoint.Point.xyz);
             float plane = math.cmin(temp);
 
-            hitPoint.Normal = math.select(0.0f, math.sign(hitPoint.Point.xyz), temp == plane);
+            hitPoint.Normal = math.select(0.0f, math.sign(hitPoint.Point.xyz), (temp == plane));
+            hitPoint.TexCoords = 0.0f;
             hitPoint.T = t;
-
+            
             return true;
         }
 
