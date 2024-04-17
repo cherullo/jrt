@@ -1,4 +1,5 @@
 using Unity.Burst;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 
 namespace JRT.Data
@@ -14,6 +15,8 @@ namespace JRT.Data
         public float4x4 LocalToWorld;
 
         public Material Material;
+
+        public UnsafeList<Triangle> Triangles;
 
         public bool IsValid()
         {
@@ -45,12 +48,36 @@ namespace JRT.Data
                 case GeometryType.Sphere:
                     result = _IntersectOriginCenteredSphere(0.5f, localRay, out hitPoint);
                     break;
+
+                case GeometryType.Mesh:
+                    result = _IntersectMesh(localRay, out hitPoint);
+                    break;
             }
 
             if (result == true)
                 hitPoint = hitPoint.TransformToWorld(this);
 
             return result;
+        }
+
+        private bool _IntersectMesh(Ray ray, out HitPoint resultingHitPoint)
+        {
+            resultingHitPoint = HitPoint.Invalid;
+            float t = float.MaxValue;
+
+            for (int i = 0; i < Triangles.Length; i++)
+            {
+                if (Triangles[i].IsIntersectedBy(ray, out HitPoint hitPoint) == true)
+                {
+                    if (hitPoint.T < t)
+                    {
+                        t = hitPoint.T;
+                        resultingHitPoint = hitPoint;
+                    }
+                }
+            }
+
+            return (t != float.MaxValue);
         }
 
         [BurstCompile]

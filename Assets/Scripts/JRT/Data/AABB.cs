@@ -44,6 +44,12 @@ namespace JRT.Data
             Max = max;
         }
 
+        public AABB(UnityEngine.Bounds bounds)
+        {
+            Min = new float4(bounds.min, 1.0f);
+            Max = new float4(bounds.max, 1.0f);
+        }
+
         public AABB(float min, float max) : this()
         {
             Min = new(min, min, min, 1.0f);

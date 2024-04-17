@@ -55,6 +55,9 @@ namespace JRT.Data
             {
                 GeometryNode node = Geometries[i];
 
+                if (node.Bounds.IsIntersectedBy(ray, out _) == false)
+                    continue;
+
                 if (node.IsIntersectedBy(ray, out HitPoint tempHitPoint) == false)
                     continue;
 
