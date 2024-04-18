@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace JRT.Data
 {
@@ -71,7 +72,8 @@ namespace JRT.Data
             {
                 if (Triangles[i].IsIntersectedBy(ray, out HitPoint hitPoint) == true)
                 {
-                    if (hitPoint.T < t)
+                    if ((hitPoint.FrontHit || hitPoint.T > 0.001f) && (hitPoint.T < t))
+                    //if (hitPoint.T < t)
                     {
                         t = hitPoint.T;
                         resultingHitPoint = hitPoint;
@@ -110,19 +112,22 @@ namespace JRT.Data
                 }
                 else
                 {
-                    float4 point = ray.Start + ray.Direction * x2;
-                    float3 normal = 2.0f * point.xyz; // new float4(math.normalize(point.xyz), 0.0f);
-                    hitPoint = new HitPoint(point, normal, x2, false, 0.0f);
-                    return true;
+                    hitPoint.T = x2;
+                    hitPoint.FrontHit = false;
                 }
             }
             else
             {
-                float4 point = ray.Start + ray.Direction * x1;
-                float3 normal = 2.0f * point.xyz; // The same as normalization since point rests in a origin centered sphere of radius 0.5f
-                hitPoint = new HitPoint(point, normal, x1, true, 0.0f);
-                return true;
+                hitPoint.T = x1;
+                hitPoint.FrontHit = true;
             }
+
+            hitPoint.Point = ray.Start + ray.Direction * hitPoint.T;
+            hitPoint.Normal = 2.0f * hitPoint.Point.xyz; // The same as normalization since point rests in a origin centered sphere of radius 0.5f
+            //hitPoint.TexCoords.x = math.atan2(-hitPoint.Normal.z, -hitPoint.Normal.x) / (2.0f * math.PI);
+            hitPoint.TexCoords.x = 0.5f + math.atan2(hitPoint.Normal.z, hitPoint.Normal.x) / (2.0f * math.PI);
+            hitPoint.TexCoords.y = 0.5f + math.asin(hitPoint.Normal.y) / math.PI;
+            return true;
         }
 
         public static GeometryNode Invalid {
