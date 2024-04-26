@@ -1,4 +1,5 @@
 using JRT.Data;
+using JRT.Utils;
 using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -28,7 +29,8 @@ namespace JRT.World.Node
             Vector2[] uvs = mesh.uv;
             int triangleCount = triangleIndexes.Length / 3;
 
-            _triangles = new UnsafeList<Triangle>(triangleCount, AllocatorManager.Persistent);
+            Triangle[] triangles = new Triangle[triangleCount];
+            
             for (int i = 0; i < triangleCount; i++)
             {
                 Triangle tri = new Triangle();
@@ -45,8 +47,10 @@ namespace JRT.World.Node
                 tri.N2 = normals[triangleIndexes[i * 3 + 2]];
                 tri.Tex2 = uvs[triangleIndexes[i * 3 + 2]];
 
-                _triangles.AddNoResize(tri);
+                triangles[i] = tri;
             }
+
+            _triangles = triangles.ToUnsafeList();
 
             ret.Triangles = _triangles;
 

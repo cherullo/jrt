@@ -68,6 +68,28 @@ namespace JRT.Data
             ShuffleComponent.LeftZ, ShuffleComponent.LeftY  // 0b0111
         };
 
+        private static readonly ShuffleComponent[] BitmaskToXShuffle = new ShuffleComponent[] {
+            ShuffleComponent.LeftZ, // 0b0000
+            ShuffleComponent.LeftZ, // 0b0001
+            ShuffleComponent.LeftX, // 0b0010
+            ShuffleComponent.LeftZ, // 0b0011
+            ShuffleComponent.LeftX, // 0b0100
+            ShuffleComponent.LeftZ, // 0b0101
+            ShuffleComponent.LeftX, // 0b0110
+            ShuffleComponent.LeftZ, // 0b0111
+        };
+
+        private static readonly ShuffleComponent[] BitmaskToYShuffle = new ShuffleComponent[] {
+            ShuffleComponent.LeftY, // 0b0000
+            ShuffleComponent.LeftY, // 0b0001
+            ShuffleComponent.LeftZ, // 0b0010
+            ShuffleComponent.LeftY, // 0b0011
+            ShuffleComponent.LeftY, // 0b0100
+            ShuffleComponent.LeftY, // 0b0101
+            ShuffleComponent.LeftZ, // 0b0110
+            ShuffleComponent.LeftY  // 0b0111
+        };
+
         private static readonly float3[] BitmaskToNormal = new float3[] {
             new float3(1, 0, 0),    // 0b0000
             new float3(1, 0, 0),    // 0b0001
@@ -79,7 +101,7 @@ namespace JRT.Data
             new float3(1, 0, 0),    // 0b0111
         };
 
-        unsafe public bool IsIntersectedBy(in Ray ray, out HitPoint hitPoint)
+        public bool IsIntersectedBy(in Ray ray, out HitPoint hitPoint)
         {
             float3 invDir = 1.0f / ray.Direction.xyz;
 
@@ -101,21 +123,16 @@ namespace JRT.Data
             hitPoint.FrontHit = (tMin >= 0);
             float t = (hitPoint.FrontHit) ? tMin : tMax;
             hitPoint.Point = ray.Start + t * ray.Direction;
-                        
-            float3 temp = math.abs(hitPoint.Point.xyz);
-            float plane = math.cmax(temp);
-            bool3 normalDirection = temp == plane;
-            // bool4 uvSelector = new bool4(!normalDirection, false);
-            int bmask = math.bitmask(new bool4(normalDirection, false));
-
-            // hitPoint.Normal = math.select(0.0f, math.sign(hitPoint.Point.xyz), normalDirection);
-            hitPoint.Normal = math.sign(hitPoint.Point.xyz) * BitmaskToNormal[bmask];
-
-            hitPoint.TexCoords = 0.5f + math.shuffle(hitPoint.Point, -hitPoint.Point, BitmaskToUVShuffle[2 * bmask], BitmaskToUVShuffle[2 * bmask + 1]);
-            // float4 texCoords = 0;
-            //math.compress(&texCoords.x, 0, hitPoint.Point, uvSelector);
-            //hitPoint.TexCoords = 0.5f + texCoords.yx;
             hitPoint.T = t;
+
+            float3 pointAbs = math.abs(hitPoint.Point.xyz);
+            float pointMax = math.cmax(pointAbs);
+            bool3 boolVector = (pointAbs == pointMax);
+
+            int bitmask = math.bitmask(new bool4(boolVector, false));
+
+            hitPoint.Normal = math.sign(hitPoint.Point.xyz) * BitmaskToNormal[bitmask];
+            hitPoint.TexCoords = 0.5f + math.shuffle(hitPoint.Point, -hitPoint.Point, BitmaskToXShuffle[bitmask], BitmaskToYShuffle[bitmask]);
             
             return true;
         }

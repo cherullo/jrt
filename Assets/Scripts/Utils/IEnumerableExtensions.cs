@@ -16,5 +16,18 @@ namespace JRT.Utils
 
             return ret;
         }
+
+        public unsafe static UnsafeList<T> ToUnsafeList<T>(this T[] array) where T : unmanaged
+        {
+            int length = array.Length;
+            var ret = new UnsafeList<T>(length, AllocatorManager.Persistent);
+            ret.Resize(length);
+
+            void* arrayPtr = UnsafeUtility.PinGCArrayAndGetDataAddress(array, out ulong gchandle);
+            UnsafeUtility.MemCpy(ret.Ptr, arrayPtr, UnsafeUtility.SizeOf<T>() * length);
+            UnsafeUtility.ReleaseGCObject(gchandle);
+
+            return ret;
+        }
     }
 }

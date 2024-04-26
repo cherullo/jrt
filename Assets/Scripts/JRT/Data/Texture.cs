@@ -1,5 +1,7 @@
+using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace JRT.Data
 {
@@ -7,7 +9,8 @@ namespace JRT.Data
     {
         public int Width; 
         public int Height;
-        public UnsafeList<float3> Pixels;
+        [ReadOnly]
+        public UnsafeList<Color> Pixels;
 
         public bool IsValid()
         {
@@ -22,7 +25,7 @@ namespace JRT.Data
             texCoords = math.clamp(texCoords, 0.0f, 0.99999f);
             texCoords = math.trunc(texCoords * new float2(Width, Height));
             
-            return Pixels[(int) (texCoords.x + texCoords.y * Width)];
+            return Pixels[(int) (texCoords.x + texCoords.y * Width)].ToFloat3();
         }
 
         public static Texture Invalid

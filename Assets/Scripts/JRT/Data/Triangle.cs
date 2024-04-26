@@ -22,9 +22,6 @@ namespace JRT.Data
             float3 e1 = P1 - P0;
             float3 e2 = P2 - P0;
 
-            // ray.Start + t * ray.Direction = P0 + u * e1 + v * e2;
-            // r = -t * ray.Direction + u * e1 + v * e2
-
             float denom = math.dot(ray.Direction.xyz, math.cross(e2, e1));
             if (denom == 0)
                 return false;

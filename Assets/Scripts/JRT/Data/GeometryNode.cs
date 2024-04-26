@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace JRT.Data
 {
@@ -73,7 +72,6 @@ namespace JRT.Data
                 if (Triangles[i].IsIntersectedBy(ray, out HitPoint hitPoint) == true)
                 {
                     if ((hitPoint.FrontHit || hitPoint.T > 0.001f) && (hitPoint.T < t))
-                    //if (hitPoint.T < t)
                     {
                         t = hitPoint.T;
                         resultingHitPoint = hitPoint;
@@ -124,7 +122,6 @@ namespace JRT.Data
 
             hitPoint.Point = ray.Start + ray.Direction * hitPoint.T;
             hitPoint.Normal = 2.0f * hitPoint.Point.xyz; // The same as normalization since point rests in a origin centered sphere of radius 0.5f
-            //hitPoint.TexCoords.x = math.atan2(-hitPoint.Normal.z, -hitPoint.Normal.x) / (2.0f * math.PI);
             hitPoint.TexCoords.x = 0.5f + math.atan2(hitPoint.Normal.z, hitPoint.Normal.x) / (2.0f * math.PI);
             hitPoint.TexCoords.y = 0.5f + math.asin(hitPoint.Normal.y) / math.PI;
             return true;

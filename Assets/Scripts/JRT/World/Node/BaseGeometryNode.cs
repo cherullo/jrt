@@ -1,9 +1,13 @@
 using JRT.Data;
+using JRT.Utils;
 using JRT.World.Light;
-
+using System;
+using System.Runtime.InteropServices;
+using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace JRT.World.Node
 {
@@ -17,7 +21,7 @@ namespace JRT.World.Node
 
         public BaseLightNode Light;
 
-        private UnsafeList<float3> _diffuseColor;
+        private UnsafeList<Color> _diffuseColor;
 
         public abstract GeometryType GetGeometryType();
 
@@ -42,7 +46,7 @@ namespace JRT.World.Node
             return ret;
         }
 
-        private Data.Texture _GetDiffuseTexture()
+        unsafe private Data.Texture _GetDiffuseTexture()
         {
             UnityEngine.Renderer renderer = GetComponent<UnityEngine.Renderer>();
             if (renderer == null)
@@ -55,12 +59,10 @@ namespace JRT.World.Node
             Data.Texture ret = new Data.Texture();
             ret.Width = texture.width;
             ret.Height = texture.height;
-            int pixelCount = texture.width * texture.height;
 
-            ret.Pixels = new UnsafeList<float3>(pixelCount, Unity.Collections.AllocatorManager.Persistent);
-            Color[] colors = texture.GetPixels();
-            for (int i = 0; i < pixelCount; i++)
-                ret.Pixels.AddNoResize(new float3(colors[i].r, colors[i].g, colors[i].b));
+            _diffuseColor = texture.GetPixels().ToUnsafeList();
+
+            ret.Pixels = _diffuseColor;
 
             return ret;
         }

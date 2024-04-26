@@ -13,6 +13,9 @@ namespace JRT.Data
 
         public float3 CalculateColor(ref World world, Ray ray, HitPoint hitPoint)
         {
+            if (hitPoint.FrontHit == false)
+                return new float3(1, 0, 0);
+
             switch (Type)
             {
                 default:
