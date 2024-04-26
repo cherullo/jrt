@@ -62,7 +62,8 @@ namespace JRT.Data
                     continue;
 
                 // Avoid self intersection
-                if ((tempHitPoint.FrontHit || tempHitPoint.T > 0.001f) && (tempHitPoint.T < hitPoint.T))
+                //if ((tempHitPoint.FrontHit || tempHitPoint.T > 0.001f) && (tempHitPoint.T < hitPoint.T))
+                if ((tempHitPoint.FrontHit) && (tempHitPoint.T < hitPoint.T))
                 {
                     hitNodeIndex = i;
                     hitPoint = tempHitPoint;

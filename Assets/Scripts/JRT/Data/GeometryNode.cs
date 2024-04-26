@@ -71,7 +71,7 @@ namespace JRT.Data
             {
                 if (Triangles[i].IsIntersectedBy(ray, out HitPoint hitPoint) == true)
                 {
-                    if ((hitPoint.FrontHit || hitPoint.T > 0.001f) && (hitPoint.T < t))
+                    if ((hitPoint.FrontHit) && (hitPoint.T < t))
                     {
                         t = hitPoint.T;
                         resultingHitPoint = hitPoint;

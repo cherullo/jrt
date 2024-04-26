@@ -30,8 +30,9 @@ namespace JRT.Data
         public float3 CalculateReflectivePhongColor(ref World world, Ray ray, HitPoint hitPoint)
         {
             float3 pointToEyeDir = math.normalize((ray.Start - hitPoint.Point).xyz);
-            
-            float R = Reflectance + (1.0f - Reflectance) * math.pow(1.0f - math.dot(pointToEyeDir, hitPoint.Normal), 5.0f);
+
+            // float R = Reflectance + (1.0f - Reflectance) * math.pow(1.0f - math.dot(pointToEyeDir, hitPoint.Normal), 5.0f);
+            float R = Reflectance + (1.0f - Reflectance) * math.pow(1.0f - math.saturate(math.dot(pointToEyeDir, hitPoint.Normal)), 5.0f);
 
             float3 color = (1.0f - R) * CalculatePhongColor(ref world, ray, hitPoint);
 
