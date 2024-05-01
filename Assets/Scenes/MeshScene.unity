@@ -1487,8 +1487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c0110feef98cf4dac467f91dcb8385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rows: 1
-  _columns: 1
+  _rows: 2
+  _columns: 2
 --- !u!114 &1481265394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1530,7 +1530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133ae5f9c123f748bb73cd7f4ea5d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resolutionScale: 0.2
+  _resolutionScale: 1
 --- !u!81 &1481265397
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1853,7 +1853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: dde172a57da7177419fe77c7d771e0fc, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

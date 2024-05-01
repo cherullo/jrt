@@ -55,7 +55,8 @@ namespace JRT.Data
                     break;
 
                 case GeometryType.Mesh:
-                    result = _IntersectMesh(localRay, out hitPoint);
+                    //result = _IntersectMesh(localRay, out hitPoint);
+                    result = _IntersectMeshFast(localRay, out hitPoint);
                     break;
             }
 
@@ -63,6 +64,54 @@ namespace JRT.Data
                 hitPoint = hitPoint.TransformToWorld(this);
 
             return result;
+        }
+
+        private bool _IntersectMeshFast(Ray ray, out HitPoint resultingHitPoint)
+        {
+            resultingHitPoint = HitPoint.Invalid;
+            float t = float.MaxValue;
+
+            UnsafeList<int> _nodeStack = new UnsafeList<int>(32, Allocator.TempJob);
+            _nodeStack.Add(0);
+
+            while (_nodeStack.IsEmpty == false)
+            {
+                int last = _nodeStack.Length - 1;
+                int nodeIndex = _nodeStack[last];
+                _nodeStack.RemoveAt(last);
+
+                AABBTreeNode node = Nodes[nodeIndex];
+
+                for (int i = 0; i < node.NumChildren; i++)
+                {
+                    HitPoint tempHP;
+                    if (new AABB(node.MinAABBs[i], node.MaxAABBs[i]).IsIntersectedBy(ray, out tempHP) == false)
+                        continue;
+                    
+                    if (tempHP.T > t)
+                        continue;
+
+                    if (node.ChildIsLeaf[i] == true)
+                    {
+                        int triangleIndex = node.ChildIndexes[i];
+                        if (Triangles[triangleIndex].IsIntersectedBy(ray, out tempHP) == true)
+                        {
+                            if ((tempHP.FrontHit) && (tempHP.T < t))
+                            {
+                                t = tempHP.T;
+                                resultingHitPoint = tempHP;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _nodeStack.Add(node.ChildIndexes[i]);
+                    }
+                }
+            }
+
+            _nodeStack.Dispose();
+            return (t != float.MaxValue);
         }
 
         private bool _IntersectMesh(Ray ray, out HitPoint resultingHitPoint)
