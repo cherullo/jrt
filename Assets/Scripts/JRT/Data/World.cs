@@ -15,11 +15,16 @@ namespace JRT.Data
         [ReadOnly]
         public NativeArray<LightNode> Lights;
 
+        public int Depth;
+
         public float3 TraceRay(Ray ray) 
         {
-            int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
+            if (Depth > 10)
+                return 0;
 
-            if (hitIndex == -1)
+            int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
+            
+            if (hitIndex == -1) 
                 return CalculateMissColor(ray);
 
             if (Geometries[hitIndex].IsLightGeometry() == true)
@@ -28,7 +33,10 @@ namespace JRT.Data
                 return CalculateDirectLightColor(ray, hitPoint, lightIndex);
             }
 
-            return Geometries[hitIndex].Material.CalculateColor(ref this, ray, hitPoint);
+            Depth++;
+            float3 ret = Geometries[hitIndex].Material.CalculateColor(ref this, ray, hitPoint);
+            Depth--;
+            return ret;
         }
 
         private float3 CalculateDirectLightColor(Ray ray, HitPoint hitPoint, int lightIndex)

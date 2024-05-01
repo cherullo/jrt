@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Numerics;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -124,7 +124,8 @@ namespace JRT.Data
             float tMin = math.cmax(m);
             float tMax = math.cmin(M);
 
-            if ((tMin >= tMax) || (tMax < 0.0f))
+
+            if ((tMin > tMax) || (tMax < 0.0f))
             {
                 hitPoint = HitPoint.Invalid;
                 return false;

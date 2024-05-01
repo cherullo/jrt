@@ -1,13 +1,9 @@
+using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
+
 using JRT.Data;
 using JRT.Utils;
 using JRT.World.Light;
-using System;
-using System.Runtime.InteropServices;
-using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.Mathematics;
-using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace JRT.World.Node
 {
