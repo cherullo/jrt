@@ -70,10 +70,12 @@ namespace JRT.Data
         {
             resultingHitPoint = HitPoint.Invalid;
             float t = float.MaxValue;
-
+            RayInvDir invDir = ray.InvertDirection();
+            
             UnsafeList<int> _nodeStack = new UnsafeList<int>(32, Allocator.TempJob);
             _nodeStack.Add(0);
 
+            HitPoint tempHP = HitPoint.Invalid;
             while (_nodeStack.IsEmpty == false)
             {
                 int last = _nodeStack.Length - 1;
@@ -81,11 +83,10 @@ namespace JRT.Data
                 _nodeStack.RemoveAt(last);
 
                 AABBTreeNode node = Nodes[nodeIndex];
-
+                
                 for (int i = 0; i < node.NumChildren; i++)
                 {
-                    HitPoint tempHP;
-                    if (new AABB(node.MinAABBs[i], node.MaxAABBs[i]).IsIntersectedBy(ray, out tempHP) == false)
+                    if (new AABB(node.MinAABBs[i], node.MaxAABBs[i]).IsIntersectedByFast(invDir, ref tempHP) == false)
                         continue;
                     
                     if (tempHP.T > t)

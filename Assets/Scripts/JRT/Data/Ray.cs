@@ -26,22 +26,31 @@ namespace JRT.Data
         private Ray Transform(float4x4 matrix)
         {
             float4 newDirection = math.mul(matrix, Direction);
-            //newDirection.xyz = math.normalize(newDirection.xyz);
 
             return new Ray(
                 math.mul(matrix, Start),
                 newDirection
             );
+        }
 
-            //float4 newStart = math.mul(matrix, Start);
-            //float4 newDirection = math.mul(matrix, Start + Direction);
-            //newDirection -= newStart;
-            //newDirection.xyz = math.normalize(newDirection.xyz);
+        public RayInvDir InvertDirection()
+        {
+            return new RayInvDir(
+                Start.xyz,
+                1.0f / Direction.xyz
+            );
+        }
+    }
 
-            //return new Ray(
-            //    newStart,
-            //    newDirection
-            //);
+    public struct RayInvDir
+    {
+        public float3 Start;
+        public float3 Direction;
+
+        public RayInvDir(float3 start, float3 direction)
+        {
+            Start = start;
+            Direction = direction;
         }
     }
 }

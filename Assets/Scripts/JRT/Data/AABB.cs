@@ -124,7 +124,6 @@ namespace JRT.Data
             float tMin = math.cmax(m);
             float tMax = math.cmin(M);
 
-
             if ((tMin > tMax) || (tMax < 0.0f))
             {
                 hitPoint = HitPoint.Invalid;
@@ -144,7 +143,27 @@ namespace JRT.Data
 
             hitPoint.Normal = math.sign(hitPoint.Point.xyz) * BitmaskToNormal[bitmask];
             hitPoint.TexCoords = 0.5f + math.shuffle(hitPoint.Point, -hitPoint.Point, BitmaskToXShuffle[bitmask], BitmaskToYShuffle[bitmask]);
-            
+
+            return true;
+        }
+
+        public bool IsIntersectedByFast(in RayInvDir ray, ref HitPoint hitPoint)
+        {
+            float3 t1 = (Min - ray.Start) * ray.Direction;
+            float3 t2 = (Max - ray.Start) * ray.Direction;
+
+            float3 m = math.min(t1, t2);
+            float3 M = math.max(t1, t2);
+
+            float tMin = math.cmax(m);
+            float tMax = math.cmin(M);
+
+            if ((tMin > tMax) || (tMax < 0.0f))
+                return false;
+
+            hitPoint.FrontHit = (tMin >= 0);
+            hitPoint.T = (hitPoint.FrontHit) ? tMin : tMax;
+
             return true;
         }
 

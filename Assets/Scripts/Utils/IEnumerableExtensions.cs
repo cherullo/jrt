@@ -53,38 +53,6 @@ namespace JRT.Utils
             }
 
             Debug.Assert(chunked == itemCount, "Split did not take all items in collection.");
-
-            //int itemsInEachChunk;
-            //int chunks;
-            //if (itemCount <= parts)
-            //{
-            //    itemsInEachChunk = 1;
-            //    chunks = itemCount;
-            //}
-            //else
-            //{
-            //    itemsInEachChunk = itemCount / parts;
-
-            //    chunks = itemCount % parts == 0
-            //       ? parts
-            //       : parts - 1;
-            //}
-
-            //var itemsToChunk = chunks * itemsInEachChunk;
-
-            //for (int i = 0; i < chunks; i++)
-            //{
-            //    yield return collection.Skip(i * itemsInEachChunk).Take(itemsInEachChunk).ToList();
-            //}
-            ////foreach (var chunk in collection.Take(itemsToChunk).Chunk(itemsInEachChunk))
-            ////{
-            ////    yield return chunk;
-            ////}
-
-            //if (itemsToChunk < itemCount)
-            //{
-            //    yield return collection.Skip(itemsToChunk).ToList();
-            //}
         }
     }
 }

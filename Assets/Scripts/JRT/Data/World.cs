@@ -67,18 +67,22 @@ namespace JRT.Data
             hitPoint = HitPoint.Invalid;
             hitPoint.T = float.MaxValue;
 
+            RayInvDir invDir = ray.InvertDirection();
+            
+            HitPoint tempHitPoint = HitPoint.Invalid;
             for (int i = 0; i < Geometries.Length; i++)
             {
                 GeometryNode node = Geometries[i];
 
-                if (node.Bounds.IsIntersectedBy(ray, out _) == false)
+                if (node.Bounds.IsIntersectedByFast(invDir, ref tempHitPoint) == false)
                     continue;
 
-                if (node.IsIntersectedBy(ray, out HitPoint tempHitPoint) == false)
+                if (tempHitPoint.FrontHit && (tempHitPoint.T >= hitPoint.T))
                     continue;
 
-                // Avoid self intersection
-                //if ((tempHitPoint.FrontHit || tempHitPoint.T > 0.001f) && (tempHitPoint.T < hitPoint.T))
+                if (node.IsIntersectedBy(ray, out tempHitPoint) == false)
+                    continue;
+
                 if ((tempHitPoint.FrontHit) && (tempHitPoint.T > 0.0001f) && (tempHitPoint.T < hitPoint.T))
                 {
                     hitNodeIndex = i;
