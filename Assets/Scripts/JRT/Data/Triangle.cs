@@ -48,5 +48,13 @@ namespace JRT.Data
             hitPoint.T = t;
             return true;
         }
+
+        public AABB CalculateAABB()
+        {
+            return new AABB(
+                math.min(math.min(P0, P1), P2),
+                math.max(math.max(P0, P1), P2)
+            );
+        }
     }
 }

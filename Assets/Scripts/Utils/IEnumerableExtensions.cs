@@ -29,5 +29,46 @@ namespace JRT.Utils
 
             return ret;
         }
+
+        public static IEnumerable<List<T>> Split<T>(this IEnumerable<T> list, int parts)
+        {
+            var collection = list is List<T> c
+                ? c
+                : list.ToList();
+
+            var itemCount = collection.Count;
+
+            int itemsInEachChunk;
+            int chunks;
+            if (itemCount <= parts)
+            {
+                itemsInEachChunk = 1;
+                chunks = itemCount;
+            }
+            else
+            {
+                itemsInEachChunk = itemCount / parts;
+
+                chunks = itemCount % parts == 0
+                   ? parts
+                   : parts - 1;
+            }
+
+            var itemsToChunk = chunks * itemsInEachChunk;
+
+            for (int i = 0; i < chunks; i++)
+            {
+                yield return collection.Skip(i * itemsInEachChunk).Take(itemsInEachChunk).ToList();
+            }
+            //foreach (var chunk in collection.Take(itemsToChunk).Chunk(itemsInEachChunk))
+            //{
+            //    yield return chunk;
+            //}
+
+            if (itemsToChunk < itemCount)
+            {
+                yield return collection.Skip(itemsToChunk).ToList();
+            }
+        }
     }
 }

@@ -1,15 +1,20 @@
-using JRT.Data;
-using JRT.Utils;
 using System;
-using Unity.Collections;
+using System.Linq;
+
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
+
+using JRT.Data;
+using JRT.Utils;
+using System.Collections.Generic;
+using Unity.Collections;
 
 namespace JRT.World.Node
 {
     public class Mesh : BaseGeometryNode
     {
         private UnsafeList<Triangle> _triangles;
+        private UnsafeList<Data.AABBTreeNode> _nodes;
 
         public override GeometryType GetGeometryType()
         {
@@ -22,7 +27,13 @@ namespace JRT.World.Node
 
             UnityEngine.Mesh mesh = _GetMesh();
             ret.Bounds = new AABB(mesh.bounds).Transform(ret.LocalToWorld);
+            ret.Triangles = _GetAllTriangles(mesh);
+            ret.Nodes = _BuildTree(ret.Triangles);
+            return ret;
+        }
 
+        private UnsafeList<Triangle> _GetAllTriangles(UnityEngine.Mesh mesh)
+        {
             int[] triangleIndexes = mesh.triangles;
             Vector3[] vertices = mesh.vertices;
             Vector3[] normals = mesh.normals;
@@ -30,7 +41,7 @@ namespace JRT.World.Node
             int triangleCount = triangleIndexes.Length / 3;
 
             Triangle[] triangles = new Triangle[triangleCount];
-            
+
             for (int i = 0; i < triangleCount; i++)
             {
                 Triangle tri = new Triangle();
@@ -51,10 +62,7 @@ namespace JRT.World.Node
             }
 
             _triangles = triangles.ToUnsafeList();
-
-            ret.Triangles = _triangles;
-
-            return ret;
+            return _triangles;
         }
 
         private UnityEngine.Mesh _GetMesh()
@@ -72,8 +80,201 @@ namespace JRT.World.Node
 
         private void OnDestroy()
         {
-            if (_triangles.IsCreated)
-                _triangles.Dispose();
+            _triangles.Dispose();
+            _nodes.Dispose();
+        }
+
+        private UnsafeList<Data.AABBTreeNode> _BuildTree(UnsafeList<Triangle> triangles)
+        {
+            List<Leaf> leafs = new List<Leaf>(triangles.Length);
+
+            for (int i = 0; i < triangles.Length; i++)
+                leafs.Add(new Leaf(i, triangles[i].CalculateAABB()));
+
+            AABBTreeNode root = CreateAABBTree(leafs);
+
+            return FlattenTree(root);
+        }
+
+        private UnsafeList<Data.AABBTreeNode> FlattenTree(AABBTreeNode root)
+        {
+            int nodeCount = _CountNodes(root);
+
+            UnsafeList<Data.AABBTreeNode> ret = new UnsafeList<Data.AABBTreeNode>(nodeCount, AllocatorManager.Persistent);
+            ret.Resize(nodeCount);
+
+            int nextFreeIndex = 1;
+            ret[0] = FlattenNode(ref ret, root, ref nextFreeIndex);
+
+            return ret;
+        }
+
+        private int _CountNodes(AABBTreeNode node)
+        {
+            if (node.IsLeaf == true)
+                return 0;
+
+            int count = 1;
+            foreach (AABBTreeNode child in node.Children)
+                count += _CountNodes(child);
+
+            return count;
+        }
+
+        private Data.AABBTreeNode FlattenNode(ref UnsafeList<Data.AABBTreeNode> flatTree, AABBTreeNode node, ref int nextFreeIndex)
+        {
+            Data.AABBTreeNode newNode = new Data.AABBTreeNode();
+
+            if (node.IsLeaf == true) // This should never happen
+                throw new Exception("Leaf node should not be inserted directly in the flat tree.");
+
+            newNode.NumChildren = node.Children.Count;
+            int properChildren = 0;
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                var child = node.Children[i];
+                newNode.MaxAABBs[i] = child.AABB.Max;
+                newNode.MinAABBs[i] = child.AABB.Min;
+                newNode.ChildIsLeaf[i] = child.IsLeaf;
+
+                if (child.IsLeaf == true)
+                {
+                    newNode.ChildIndexes[i] = child.LeafIndex;
+                }
+                else
+                {
+                    properChildren++;
+                }
+            }
+
+            int savedIndex = nextFreeIndex;
+            nextFreeIndex += properChildren;
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                if (node.Children[i].IsLeaf == true)
+                    continue;
+
+                newNode.ChildIndexes[i] = savedIndex;
+                flatTree[savedIndex++] = FlattenNode(ref flatTree, node.Children[i], ref nextFreeIndex);
+            }
+
+            return newNode;
+        }
+
+        private AABBTreeNode CreateAABBTree(List<Leaf> leafs)
+        {
+            if ((leafs == null) || (leafs.Count == 0))
+                return null;
+
+            AABB aabb = leafs[0].AABB;
+
+            for(int i = 1; i < leafs.Count; i++)
+                aabb.Encapsulate(leafs[i].AABB);
+
+            AABBTreeNode ret = new AABBTreeNode();
+            ret.AABB = aabb;
+
+            //if (leafs.Count <= 4)
+            //{
+            //    for (int i = 0; i < leafs.Count; i++) {
+            //        var child = new AABBTreeNode();
+            //        child.LeafIndex = leafs[i].Index;
+            //        child.AABB = leafs[i].AABB;
+            //        ret.Children.Add(child);
+            //    }
+            //    return ret;
+            //}
+
+            // Sort
+            IComparer<Leaf> comparer = _ChooseComparer(aabb);
+            leafs.Sort(comparer);
+
+            // Partition and recurse
+            foreach (List<Leaf> chunk in leafs.Split(4))
+            {
+                if (chunk.Count == 0) 
+                    continue;
+
+                if (chunk.Count == 1)
+                {
+                    var leaf = chunk[0];
+                    var child = new AABBTreeNode();
+                    child.LeafIndex = leaf.Index;
+                    child.AABB = leaf.AABB;
+                    ret.Children.Add(child);
+                }
+                else
+                {
+                    ret.Children.Add(CreateAABBTree(chunk));
+                }
+            }
+
+            return ret;
+        }
+
+        private IComparer<Leaf> _ChooseComparer(AABB aabb)
+        {
+            var delta = aabb.Max - aabb.Min;
+
+            if ((delta.x >= delta.y) && (delta.x >= delta.z))
+                return MaxXComparer.Default;
+
+            if ((delta.y >= delta.x) && (delta.y >= delta.z))
+                return MaxYComparer.Default;
+
+            //if ((delta.z >= delta.x) && (delta.z >= delta.y))
+                return MaxZComparer.Default;
+        }
+
+        private class MaxXComparer : IComparer<Leaf>
+        {
+            public int Compare(Leaf x, Leaf y)
+            {
+                return Comparer<float>.Default.Compare(x.AABB.Max.x, y.AABB.Max.x);
+            }
+
+            public static MaxXComparer Default = new MaxXComparer();
+        }
+
+        private class MaxYComparer : IComparer<Leaf>
+        {
+            public int Compare(Leaf x, Leaf y)
+            {
+                return Comparer<float>.Default.Compare(x.AABB.Max.y, y.AABB.Max.y);
+            }
+
+            public static MaxYComparer Default = new MaxYComparer();
+        }
+
+        private class MaxZComparer : IComparer<Leaf>
+        {
+            public int Compare(Leaf x, Leaf y)
+            {
+                return Comparer<float>.Default.Compare(x.AABB.Max.z, y.AABB.Max.z);
+            }
+
+            public static MaxZComparer Default = new MaxZComparer();
+        }
+
+        private class Leaf
+        {
+            public int Index;
+            public AABB AABB;
+
+            public Leaf(int index, AABB aabb)
+            {
+                Index = index;
+                AABB = aabb;
+            }
+        }
+
+        private class AABBTreeNode
+        {
+            public int LeafIndex = -1;
+            public AABB AABB;
+            public List<AABBTreeNode> Children = new List<AABBTreeNode>();
+
+            public bool IsLeaf => LeafIndex >= 0;
         }
     }
 }

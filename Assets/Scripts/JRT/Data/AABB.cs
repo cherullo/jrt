@@ -1,3 +1,5 @@
+using System;
+using System.Numerics;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
@@ -37,9 +39,17 @@ namespace JRT.Data
             new(0,  0, -1, 0),
         };
 
-        public float4 Min, Max;
+        public float3 Min, Max;
+
+        public static readonly AABB Empty = new(float.MaxValue, float.MinValue);
 
         public AABB(float4 min, float4 max)
+        {
+            Min = min.xyz;
+            Max = max.xyz;
+        }
+
+        public AABB(float3 min, float3 max)
         {
             Min = min;
             Max = max;
@@ -47,14 +57,14 @@ namespace JRT.Data
 
         public AABB(UnityEngine.Bounds bounds)
         {
-            Min = new float4(bounds.min, 1.0f);
-            Max = new float4(bounds.max, 1.0f);
+            Min = bounds.min;
+            Max = bounds.max;
         }
 
         public AABB(float min, float max) : this()
         {
-            Min = new(min, min, min, 1.0f);
-            Max = new(max, max, max, 1.0f);
+            Min = new(min, min, min);
+            Max = new(max, max, max);
         }
 
         private static readonly ShuffleComponent[] BitmaskToUVShuffle = new ShuffleComponent[] {
@@ -105,8 +115,8 @@ namespace JRT.Data
         {
             float3 invDir = 1.0f / ray.Direction.xyz;
 
-            float3 t1 = (Min.xyz - ray.Start.xyz) * invDir;
-            float3 t2 = (Max.xyz - ray.Start.xyz) * invDir;
+            float3 t1 = (Min - ray.Start.xyz) * invDir;
+            float3 t2 = (Max - ray.Start.xyz) * invDir;
 
             float3 m = math.min(t1, t2);
             float3 M = math.max(t1, t2);
@@ -144,7 +154,7 @@ namespace JRT.Data
 
             for (int i = 0; i < Corners.Length; i++)
             {
-                float4 localVertex = GetCorner(i);
+                float4 localVertex = new float4(GetCorner(i), 1.0f);
                 float4 transformedVertex = math.mul(matrix, localVertex);
                 retMin = math.min(retMin, transformedVertex);
                 retMax = math.max(retMax, transformedVertex);
@@ -153,9 +163,15 @@ namespace JRT.Data
             return new AABB(retMin, retMax);
         }
 
-        public float4 GetCorner(int i)
+        public float3 GetCorner(int i)
         {
-            return math.select(Min, Max, new bool4(Corners[i], false));
+            return math.select(Min, Max, Corners[i]);
+        }
+
+        public void Encapsulate(AABB other)
+        {
+            Min = math.min(Min, other.Min);
+            Max = math.max(Max, other.Max);
         }
     }
 }

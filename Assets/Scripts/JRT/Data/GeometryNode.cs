@@ -20,6 +20,9 @@ namespace JRT.Data
         [ReadOnly]
         public UnsafeList<Triangle> Triangles;
 
+        [ReadOnly]
+        public UnsafeList<AABBTreeNode> Nodes;
+
         public bool IsValid()
         {
             return Type != GeometryType.Undefined;

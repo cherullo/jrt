@@ -33,11 +33,19 @@ namespace JRT.Data
 
         private float3 CalculateDirectLightColor(Ray ray, HitPoint hitPoint, int lightIndex)
         {
-            float distance = math.length(ray.Start - hitPoint.Point);
-
             LightNode light = Lights[lightIndex];
+            return light.Color;
+                        
+            //float distance = math.length(ray.Start - hitPoint.Point);
+            
+            //float3 color = light.Color * light.Power / (distance);
 
-            return light.Color * light.Power;// / (distance));
+            //float max = math.cmax(color);
+
+            //if (max > 1.0f)
+            //    color /= max;
+
+            //return color;
         }
 
         private float3 CalculateMissColor(Ray ray)
@@ -63,7 +71,7 @@ namespace JRT.Data
 
                 // Avoid self intersection
                 //if ((tempHitPoint.FrontHit || tempHitPoint.T > 0.001f) && (tempHitPoint.T < hitPoint.T))
-                if ((tempHitPoint.FrontHit) && (tempHitPoint.T < hitPoint.T))
+                if ((tempHitPoint.FrontHit) && (tempHitPoint.T > 0.0001f) && (tempHitPoint.T < hitPoint.T))
                 {
                     hitNodeIndex = i;
                     hitPoint = tempHitPoint;
