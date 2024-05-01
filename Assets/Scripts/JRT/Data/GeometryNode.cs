@@ -179,6 +179,13 @@ namespace JRT.Data
             return true;
         }
 
+        public void Dispose()
+        {
+            Triangles.Dispose();
+            Nodes.Dispose();
+            Material.Dispose();
+        }
+
         public static GeometryNode Invalid {
             get
             {

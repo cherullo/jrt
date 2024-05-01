@@ -67,7 +67,7 @@ namespace JRT.World.Node
             return ret;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             _diffuseColor.Dispose();
         }

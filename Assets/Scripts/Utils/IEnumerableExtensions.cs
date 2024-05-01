@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace JRT.Utils
 {
@@ -38,37 +40,51 @@ namespace JRT.Utils
 
             var itemCount = collection.Count;
 
-            int itemsInEachChunk;
-            int chunks;
-            if (itemCount <= parts)
-            {
-                itemsInEachChunk = 1;
-                chunks = itemCount;
-            }
-            else
-            {
-                itemsInEachChunk = itemCount / parts;
+            int itemsInEachChunk = itemCount / parts;
+            int remaining = itemCount % parts;
 
-                chunks = itemCount % parts == 0
-                   ? parts
-                   : parts - 1;
+            int chunked = 0;
+            for (int i = 0; i < parts; i++)
+            {
+                int inChunk = itemsInEachChunk + (i < remaining ? 1 : 0);
+
+                yield return collection.Skip(chunked).Take(inChunk).ToList();
+                chunked += inChunk;
             }
 
-            var itemsToChunk = chunks * itemsInEachChunk;
+            Debug.Assert(chunked == itemCount, "Split did not take all items in collection.");
 
-            for (int i = 0; i < chunks; i++)
-            {
-                yield return collection.Skip(i * itemsInEachChunk).Take(itemsInEachChunk).ToList();
-            }
-            //foreach (var chunk in collection.Take(itemsToChunk).Chunk(itemsInEachChunk))
+            //int itemsInEachChunk;
+            //int chunks;
+            //if (itemCount <= parts)
             //{
-            //    yield return chunk;
+            //    itemsInEachChunk = 1;
+            //    chunks = itemCount;
+            //}
+            //else
+            //{
+            //    itemsInEachChunk = itemCount / parts;
+
+            //    chunks = itemCount % parts == 0
+            //       ? parts
+            //       : parts - 1;
             //}
 
-            if (itemsToChunk < itemCount)
-            {
-                yield return collection.Skip(itemsToChunk).ToList();
-            }
+            //var itemsToChunk = chunks * itemsInEachChunk;
+
+            //for (int i = 0; i < chunks; i++)
+            //{
+            //    yield return collection.Skip(i * itemsInEachChunk).Take(itemsInEachChunk).ToList();
+            //}
+            ////foreach (var chunk in collection.Take(itemsToChunk).Chunk(itemsInEachChunk))
+            ////{
+            ////    yield return chunk;
+            ////}
+
+            //if (itemsToChunk < itemCount)
+            //{
+            //    yield return collection.Skip(itemsToChunk).ToList();
+            //}
         }
     }
 }

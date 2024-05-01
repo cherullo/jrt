@@ -78,8 +78,10 @@ namespace JRT.World.Node
             throw new Exception($"No mesh in {gameObject.name}");
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             _triangles.Dispose();
             _nodes.Dispose();
         }
@@ -100,13 +102,13 @@ namespace JRT.World.Node
         {
             int nodeCount = _CountNodes(root);
 
-            UnsafeList<Data.AABBTreeNode> ret = new UnsafeList<Data.AABBTreeNode>(nodeCount, AllocatorManager.Persistent);
-            ret.Resize(nodeCount);
+            _nodes = new UnsafeList<Data.AABBTreeNode>(nodeCount, AllocatorManager.Persistent);
+            _nodes.Resize(nodeCount);
 
             int nextFreeIndex = 1;
-            ret[0] = FlattenNode(ref ret, root, ref nextFreeIndex);
+            _nodes[0] = FlattenNode(ref _nodes, root, ref nextFreeIndex);
 
-            return ret;
+            return _nodes;
         }
 
         private int _CountNodes(AABBTreeNode node)

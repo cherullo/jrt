@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -26,6 +27,11 @@ namespace JRT.Data
             texCoords = math.trunc(texCoords * new float2(Width, Height));
             
             return Pixels[(int) (texCoords.x + texCoords.y * Width)].ToFloat3();
+        }
+
+        public void Dispose()
+        {
+            Pixels.Dispose();
         }
 
         public static Texture Invalid

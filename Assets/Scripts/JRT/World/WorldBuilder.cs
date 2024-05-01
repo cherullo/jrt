@@ -68,11 +68,8 @@ namespace JRT.World
 
         private void OnDestroy()
         {
-            if (_geometryNodes.IsCreated == true)
-                _geometryNodes.Dispose();
-
-            if (_lightNodes.IsCreated == true)
-                _lightNodes.Dispose();
+            _geometryNodes.Dispose();
+            _lightNodes.Dispose();
         }
     }
 }

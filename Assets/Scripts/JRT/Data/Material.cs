@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 
 namespace JRT.Data
@@ -66,6 +67,11 @@ namespace JRT.Data
             }
 
             return color;
+        }
+
+        public void Dispose()
+        {
+            DiffuseTexture.Dispose();
         }
     }
 }
