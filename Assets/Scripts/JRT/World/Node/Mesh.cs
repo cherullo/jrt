@@ -73,7 +73,11 @@ namespace JRT.World.Node
             
             SkinnedMeshRenderer smr = GetComponent<SkinnedMeshRenderer>();
             if (smr != null)
-                return smr.sharedMesh;
+            {
+                UnityEngine.Mesh bakedMesh = new UnityEngine.Mesh();
+                smr.BakeMesh(bakedMesh, true);
+                return bakedMesh;
+            }
 
             throw new Exception($"No mesh in {gameObject.name}");
         }
@@ -175,17 +179,6 @@ namespace JRT.World.Node
 
             AABBTreeNode ret = new AABBTreeNode();
             ret.AABB = aabb;
-
-            //if (leafs.Count <= 4)
-            //{
-            //    for (int i = 0; i < leafs.Count; i++) {
-            //        var child = new AABBTreeNode();
-            //        child.LeafIndex = leafs[i].Index;
-            //        child.AABB = leafs[i].AABB;
-            //        ret.Children.Add(child);
-            //    }
-            //    return ret;
-            //}
 
             // Sort
             IComparer<Leaf> comparer = _ChooseComparer(aabb);

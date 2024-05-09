@@ -83,7 +83,7 @@ namespace JRT.Data
                 if (node.IsIntersectedBy(ray, out tempHitPoint) == false)
                     continue;
 
-                if ((tempHitPoint.FrontHit) && (tempHitPoint.T > 0.0001f) && (tempHitPoint.T < hitPoint.T))
+                if ((tempHitPoint.T > 0.0001f) && (tempHitPoint.T < hitPoint.T))
                 {
                     hitNodeIndex = i;
                     hitPoint = tempHitPoint;

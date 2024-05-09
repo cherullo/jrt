@@ -1,6 +1,4 @@
-﻿using System;
-using System.Numerics;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 namespace JRT.Data

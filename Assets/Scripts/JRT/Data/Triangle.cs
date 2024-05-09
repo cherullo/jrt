@@ -14,22 +14,20 @@ namespace JRT.Data
         public float2 Tex1;
         public float2 Tex2;
 
-        public bool IsIntersectedBy(in Ray ray, out HitPoint hitPoint)
+        public bool IsIntersectedBy(in Ray ray, ref HitPoint hitPoint)
         {
-            hitPoint = HitPoint.Invalid;
+            //hitPoint = HitPoint.Invalid;
 
             float3 r = ray.Start.xyz - P0;
             float3 e1 = P1 - P0;
             float3 e2 = P2 - P0;
 
             float denom = math.dot(ray.Direction.xyz, math.cross(e2, e1));
-            if (denom == 0)
+            if (math.abs(denom) < float.Epsilon)
                 return false;
 
             float invDenom = 1.0f / denom;
             
-            hitPoint.FrontHit = (denom > 0.0f);
-
             float u = invDenom * math.dot(ray.Direction.xyz, math.cross(e2, r));
             if ((u < 0.0f) || (u > 1.0f)) return false;
             
@@ -42,6 +40,7 @@ namespace JRT.Data
             float t = invDenom * math.dot(r, math.cross(e1, e2));
             if (t < 0.0f) return false;
 
+            hitPoint.FrontHit = (denom > 0.0f);
             hitPoint.Point = ray.Start + t * ray.Direction;
             hitPoint.Normal = math.normalize( (1.0f - u - v) * N0 + u * N1 + v * N2 );
             hitPoint.TexCoords = (1.0f - u - v) * Tex0 + u * Tex1 + v * Tex2;

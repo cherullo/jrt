@@ -45,7 +45,7 @@ namespace JRT.Data
             int hitIndex = world.ComputeIntersection(toLight, out HitPoint auxHit);
 
             // TODO: Check if geometry hit is behind light.
-            if ((hitIndex == -1) || (world.Geometries[hitIndex].LightIndex == Index))
+            if (world.Geometries[hitIndex].LightIndex == Index)
             {
                 float lightIncidenceDecay = math.max(0.0f, math.dot(-pointToLightDir, lightDirection));
                 return Color * ((SampleArea * lightIncidenceDecay * Power) / (distance * distance));

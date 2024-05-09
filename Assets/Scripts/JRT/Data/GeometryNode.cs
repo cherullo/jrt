@@ -55,7 +55,6 @@ namespace JRT.Data
                     break;
 
                 case GeometryType.Mesh:
-                    //result = _IntersectMesh(localRay, out hitPoint);
                     result = _IntersectMeshFast(localRay, out hitPoint);
                     break;
             }
@@ -84,20 +83,14 @@ namespace JRT.Data
 
                 AABBTreeNode node = Nodes[nodeIndex];
                 
-                for (int i = 0; i < node.NumChildren; i++)
+                for (int i = node.NumChildren - 1; i >= 0; i--)
                 {
-                    if (new AABB(node.MinAABBs[i], node.MaxAABBs[i]).IsIntersectedByFast(invDir, ref tempHP) == false)
-                        continue;
-                    
-                    if (tempHP.T > t)
-                        continue;
-
                     if (node.ChildIsLeaf[i] == true)
                     {
                         int triangleIndex = node.ChildIndexes[i];
-                        if (Triangles[triangleIndex].IsIntersectedBy(ray, out tempHP) == true)
+                        if (Triangles[triangleIndex].IsIntersectedBy(ray, ref tempHP) == true)
                         {
-                            if ((tempHP.FrontHit) && (tempHP.T < t))
+                            if ((tempHP.T < t) && (tempHP.T > 0.001f))
                             {
                                 t = tempHP.T;
                                 resultingHitPoint = tempHP;
@@ -106,6 +99,12 @@ namespace JRT.Data
                     }
                     else
                     {
+                        if (new AABB(node.MinAABBs[i], node.MaxAABBs[i]).IsIntersectedByFast(invDir, ref tempHP) == false)
+                            continue;
+
+                        if ((tempHP.T > t) && (tempHP.FrontHit == true))
+                            continue;
+
                         _nodeStack.Add(node.ChildIndexes[i]);
                     }
                 }
@@ -120,11 +119,12 @@ namespace JRT.Data
             resultingHitPoint = HitPoint.Invalid;
             float t = float.MaxValue;
 
+            HitPoint hitPoint = HitPoint.Invalid;
             for (int i = 0; i < Triangles.Length; i++)
             {
-                if (Triangles[i].IsIntersectedBy(ray, out HitPoint hitPoint) == true)
+                if (Triangles[i].IsIntersectedBy(ray, ref hitPoint) == true)
                 {
-                    if ((hitPoint.FrontHit) && (hitPoint.T < t))
+                    if ((hitPoint.T < t) && (hitPoint.T > 0.001f))
                     {
                         t = hitPoint.T;
                         resultingHitPoint = hitPoint;
