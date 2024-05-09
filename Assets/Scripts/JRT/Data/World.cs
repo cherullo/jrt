@@ -90,6 +90,8 @@ namespace JRT.Data
                 }
             }
 
+            hitPoint.Point = ray.Start + (hitPoint.T - 0.001f) * ray.Direction;
+
             return hitNodeIndex;
         }
     }

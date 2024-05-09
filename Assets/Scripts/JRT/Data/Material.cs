@@ -1,4 +1,5 @@
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 namespace JRT.Data
 {
@@ -38,7 +39,8 @@ namespace JRT.Data
 
             float3 reflect = math.normalize(math.reflect(-pointToEyeDir, hitPoint.Normal));
 
-            color += R * world.TraceRay(new Ray(hitPoint.Point, new float4(reflect, 0.0f)));
+            if (dot(reflect, hitPoint.Normal.xyz) > 0.000001f)
+                color += R * world.TraceRay(new Ray(hitPoint.Point, new float4(reflect, 0.0f)));
 
             return color;
         }
