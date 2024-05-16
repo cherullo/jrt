@@ -40,7 +40,7 @@ namespace JRT.Data
             float3 reflect = math.normalize(math.reflect(-pointToEyeDir, hitPoint.Normal));
 
             if (dot(reflect, hitPoint.Normal.xyz) > 0.000001f)
-                color += R * world.TraceRay(new Ray(hitPoint.Point, new float4(reflect, 0.0f)));
+                color += R * world.TraceRay(new Ray(hitPoint.Point, reflect));
 
             return color;
         }
@@ -68,6 +68,24 @@ namespace JRT.Data
             }
 
             return color;
+        }
+
+        public float3 GetBRDF(float3 normal, float3 pointToLightDir)
+        {
+            // Diffuse
+            return DiffuseColor / PI;
+        }
+
+        public void GetHemisphereSample(ref RNG random, out float3 hemDirection, out float sampleProbability)
+        {
+            float xi1 = random.float01;
+            float xi2 = random.float01;
+
+            hemDirection.x = cos(2 * PI * xi2) * sqrt(xi1);
+            hemDirection.y = sin(2 * PI * xi2) * sqrt(xi1);
+            hemDirection.z = sqrt(1 - xi1);
+
+            sampleProbability = hemDirection.z / PI;
         }
 
         public void Dispose()

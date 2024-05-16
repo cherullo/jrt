@@ -26,22 +26,8 @@ namespace JRT.Renderer
 
             for (int i = 0; i < Pixels.Length; i++)
             {
-                switch (Type)
-                {
-                    default:
-                    case RenderType.RayTracing:
-                        OutputColors[i] = CalculatePixelColor(Pixels[i]);
-                        break;
-                    case RenderType.PathTracing:
-                        OutputColors[i] = TracePixelPath(Pixels[i]);
-                        break;
-                }
+                OutputColors[i] = CalculatePixelColor(Pixels[i]);
             }
-        }
-
-        UnityEngine.Color32 TracePixelPath(int2 pixel)
-        {
-            return new UnityEngine.Color32();
         }
 
         UnityEngine.Color32 CalculatePixelColor(int2 pixel)
@@ -53,7 +39,16 @@ namespace JRT.Renderer
             {
                 Ray ray = Film.GenerateRay(ref World.Random, pixel, sampleIndex);
 
-                color += World.TraceRay(ray);
+                switch (Type)
+                {
+                    default:
+                    case RenderType.RayTracing:
+                        color += World.TraceRay(ray);
+                        break;
+                    case RenderType.PathTracing:
+                        color += World.TracePath(ray, 10);
+                        break;
+                }
             }
 
             int3 intColor = (int3)math.round(math.clamp(color / sampleCount, 0.0f, 1.0f) * 255);

@@ -44,6 +44,9 @@ namespace JRT.Data
             Ray toLight = new Ray(point, pointToLight);
             int hitIndex = world.ComputeIntersection(toLight, out HitPoint auxHit);
 
+            if (hitIndex == -1)
+                return 0;
+
             // TODO: Check if geometry hit is behind light.
             if (world.Geometries[hitIndex].LightIndex == Index)
             {

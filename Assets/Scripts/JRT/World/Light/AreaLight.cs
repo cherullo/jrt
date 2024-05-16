@@ -13,7 +13,7 @@ namespace JRT.World.Light
             get
             {
                 // I'm doing this because Awake doesn't usually run on editor.
-                return GetComponent<ISampler>() ?? DefaultSampler.Instance;
+                return GetComponent<ISampler>() ?? gameObject.AddComponent<DefaultSampler>();
             }
         }
 

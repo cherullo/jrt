@@ -14,9 +14,5 @@ namespace JRT.Sampling
         {
             return new float2[1] { 0.5f };
         }
-
-        private static DefaultSampler _instance = new DefaultSampler();
-        public static DefaultSampler Instance { get => _instance; }
-
     }
 }

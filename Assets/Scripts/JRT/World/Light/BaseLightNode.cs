@@ -1,5 +1,5 @@
 using JRT.Data;
-using Unity.Mathematics;
+
 using UnityEngine;
 
 namespace JRT.World.Light

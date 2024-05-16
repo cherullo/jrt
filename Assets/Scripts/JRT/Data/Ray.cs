@@ -13,6 +13,10 @@ namespace JRT.Data
             Direction = direction;
         }
 
+        public Ray(float4 start, float3 direction) : this(start, new float4(direction, 0))
+        {
+        }
+
         public Ray TransformToLocal(GeometryNode node)
         {
             return Transform(node.WorldToLocal);
