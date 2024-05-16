@@ -9,6 +9,7 @@ namespace JRT.Renderer
     [BurstCompile]
     public struct RenderBlockJob : IJob
     {
+        public RenderType Type;
         public Data.World World;
         public Data.Film Film;
 
@@ -25,8 +26,22 @@ namespace JRT.Renderer
 
             for (int i = 0; i < Pixels.Length; i++)
             {
-                OutputColors[i] = CalculatePixelColor(Pixels[i]);
+                switch (Type)
+                {
+                    default:
+                    case RenderType.RayTracing:
+                        OutputColors[i] = CalculatePixelColor(Pixels[i]);
+                        break;
+                    case RenderType.PathTracing:
+                        OutputColors[i] = TracePixelPath(Pixels[i]);
+                        break;
+                }
             }
+        }
+
+        UnityEngine.Color32 TracePixelPath(int2 pixel)
+        {
+            return new UnityEngine.Color32();
         }
 
         UnityEngine.Color32 CalculatePixelColor(int2 pixel)

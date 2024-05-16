@@ -17,6 +17,9 @@ namespace JRT.Renderer
         public int blockHeight = 8;
 
         [SerializeField]
+        private RenderType _renderType;
+
+        [SerializeField]
         private FilmAdapter _film;
         
         [SerializeField]
@@ -68,6 +71,7 @@ namespace JRT.Renderer
                     int blockPixelCount = actualBlockWidth * actualBlockHeight;
 
                     RenderBlockJob job = new RenderBlockJob();
+                    job.Type = _renderType;
                     job.World = world;
                     job.World.Random.State = (uint) (x + y * blockWidth);
                     job.Film = film;

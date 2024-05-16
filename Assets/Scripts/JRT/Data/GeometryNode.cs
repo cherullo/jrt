@@ -67,8 +67,10 @@ namespace JRT.Data
 
         private bool _IntersectMeshFast(Ray ray, out HitPoint resultingHitPoint)
         {
-            resultingHitPoint = HitPoint.Invalid;
+            FastTriHit fastHit = FastTriHit.Invalid;
+            FastTriHit tempTriHit = FastTriHit.Invalid;
             float t = float.MaxValue;
+            int triangleHitIndex = -1;
             RayInvDir invDir = ray.InvertDirection();
             
             UnsafeList<int> _nodeStack = new UnsafeList<int>(32, Allocator.TempJob);
@@ -88,12 +90,13 @@ namespace JRT.Data
                     if (node.ChildIsLeaf[i] == true)
                     {
                         int triangleIndex = node.ChildIndexes[i];
-                        if (Triangles[triangleIndex].IsIntersectedBy(ray, ref tempHP) == true)
+                        if (Triangles[triangleIndex].IsIntersectedByFast(ray, ref tempTriHit) == true)
                         {
-                            if ((tempHP.T < t) && (tempHP.T > 0.001f))
+                            if ((tempTriHit.T < t) && (tempTriHit.T > 0.001f))
                             {
-                                t = tempHP.T;
-                                resultingHitPoint = tempHP;
+                                t = tempTriHit.T;
+                                fastHit = tempTriHit;
+                                triangleHitIndex = triangleIndex;
                             }
                         }
                     }
@@ -111,7 +114,18 @@ namespace JRT.Data
             }
 
             _nodeStack.Dispose();
-            return (t != float.MaxValue);
+
+            if (triangleHitIndex != -1)
+            {
+                Triangles[triangleHitIndex].CalculateHitDetails(ray, fastHit, out resultingHitPoint);
+                // Triangles[triangleHitIndex].CalculateHitDetails(ray, t, out resultingHitPoint);
+                return true;
+            }
+            else
+            {
+                resultingHitPoint = HitPoint.Invalid;
+                return false;
+            }
         }
 
         private bool _IntersectMesh(Ray ray, out HitPoint resultingHitPoint)
