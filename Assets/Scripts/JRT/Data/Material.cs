@@ -1,4 +1,5 @@
 using Unity.Mathematics;
+
 using static Unity.Mathematics.math;
 
 namespace JRT.Data
@@ -47,7 +48,7 @@ namespace JRT.Data
 
         public float3 CalculatePhongColor(ref World world, Ray ray, HitPoint hitPoint)
         {
-            float3 diffuseColor = DiffuseColor * DiffuseTexture.SampleColor(hitPoint.TexCoords);
+            float3 diffuseColor = GetDiffuseColor(hitPoint.TexCoords);
             float3 color = diffuseColor * world.AmbientLight;
             float4 pointToEyeDir = new float4(math.normalize((ray.Start - hitPoint.Point).xyz), 0.0f);
 
@@ -70,10 +71,15 @@ namespace JRT.Data
             return color;
         }
 
+        public float3 GetDiffuseColor(float2 texCoords)
+        {
+            return DiffuseColor * DiffuseTexture.SampleColor(texCoords);
+        }
+
         public float3 GetBRDF(float3 normal, float3 pointToLightDir)
         {
             // Diffuse
-            return DiffuseColor / PI;
+            return 1.0f / PI;
         }
 
         public void GetHemisphereSample(ref RNG random, out float3 hemDirection, out float sampleProbability)
@@ -92,5 +98,6 @@ namespace JRT.Data
         {
             DiffuseTexture.Dispose();
         }
+
     }
 }

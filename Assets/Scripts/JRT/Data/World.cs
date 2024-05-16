@@ -73,13 +73,13 @@ namespace JRT.Data
                 float3 Le = Lights[lightIndex].CalculateRadiance(ref this, point, sampleIndex, out float3 pointToLightDir);
                 Le *= max(0, dot(normal, pointToLightDir)) / (lightProbability * sampleProbability);
 
-                // TODO: Implement proper material BRDF
-                float3 BRDF = mat.GetBRDF(normal, pointToLightDir);
+                float3 pointDiffuseColor = mat.GetDiffuseColor(hitPoint.TexCoords);
+                float3 BRDF = pointDiffuseColor * mat.GetBRDF(normal, pointToLightDir);
                 L += (Le * BRDF * beta);
 
                 mat.GetHemisphereSample(ref Random, out float3 hemDirection, out float hemSampleProbability);
                 float3 newDirection = new Hemisphere(point, normal).ToGlobal(hemDirection);
-                beta *= mat.GetBRDF(normal, newDirection) * max(0, dot(normal, newDirection)) / hemSampleProbability;
+                beta *= pointDiffuseColor * mat.GetBRDF(normal, newDirection) * max(0, dot(normal, newDirection)) / hemSampleProbability;
 
                 ray = new Ray(point, newDirection);
             }
