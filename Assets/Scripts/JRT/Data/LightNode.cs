@@ -5,11 +5,11 @@ namespace JRT.Data
     public struct LightNode 
     {
         public int Index;
-
         public LightType Type;
         public float Power;
-        public float3 Color;
+        public float NormalizedAccumulatedPower;
         public float4x4 LocalToWorld;
+        public float3 Color;
         public float SampleArea;
 
         // Area Lights
@@ -72,6 +72,35 @@ namespace JRT.Data
                     lightDirection = math.normalize(LocalToWorld.c2.xyz); // Forward
                     float4 sampleLocalPos = new(Sampler.GetSample(sampleIndex, ref Random) - 0.5f, 0.0f, 1.0f);
                     return math.mul(LocalToWorld, sampleLocalPos);
+            }
+        }
+
+        public void ChooseRandomSample(ref RNG random, out int sampleIndex, out float sampleProbability)
+        {
+            switch (Type)
+            {
+                default:
+                case LightType.Undefined:
+                case LightType.PointLight:
+                    sampleIndex = 0;
+                    sampleProbability = 1.0f;
+                    break;
+
+                case LightType.AreaLight:
+                    if (Sampler.MultiSamplingType == Sampling.MultiSamplingType.FixedPoints)
+                    {
+                        sampleIndex = random.Index(Sampler.SampleCount);
+                        sampleProbability = 1.0f / Sampler.SampleCount;
+                    }
+                    else
+                    {
+                        sampleIndex = 0;
+
+                        // Deveria ser 1 / Area = 1 / (SampleCount * SampleArea)
+                        // Mas já estamos multiplicando a radiancia por SampleArea na função CalculateRadiance
+                        sampleProbability = 1.0f / (Sampler.SampleCount);
+                    }
+                    break;
             }
         }
 

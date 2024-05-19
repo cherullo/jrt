@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Mathematics;
 
@@ -65,11 +66,9 @@ namespace JRT.Data
                 float4 point = hitPoint.Point;
                 float3 normal = hitPoint.Normal;
 
-                // TODO: Choose a light source and sample
-                int lightIndex = 0;
-                int sampleIndex = 0;
-                float lightProbability = 1;
-                float sampleProbability = 1;
+                ChooseRandomLight(out int lightIndex, out float lightProbability);
+                Lights[lightIndex].ChooseRandomSample(ref Random, out int sampleIndex, out float sampleProbability);
+
                 float3 Le = Lights[lightIndex].CalculateRadiance(ref this, point, sampleIndex, out float3 pointToLightDir);
                 Le *= max(0, dot(normal, pointToLightDir)) / (lightProbability * sampleProbability);
 
@@ -85,6 +84,23 @@ namespace JRT.Data
             }
 
             return L;
+        }
+
+        private void ChooseRandomLight(out int lightIndex, out float lightProbability)
+        {
+            float random = Random.float01;
+            float last = 0.0f;
+            int i;
+            for (i = 0; i < Lights.Length - 1; i++)
+            {
+                if (random < Lights[i].NormalizedAccumulatedPower)
+                    break;
+
+                last = Lights[i].NormalizedAccumulatedPower;
+            }
+
+            lightIndex = i;
+            lightProbability = Lights[i].NormalizedAccumulatedPower - last;
         }
 
         private float3 CalculateDirectLightColor(Ray ray, HitPoint hitPoint, int lightIndex)

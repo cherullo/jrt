@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 
 namespace JRT.Data
@@ -36,6 +37,11 @@ namespace JRT.Data
             {
                 return new float2(float01, float01);
             }
+        }
+
+        public int Index(int sampleCount)
+        {
+            return (int) math.trunc(sampleCount * float01 * 0.99999f);
         }
     }
 }

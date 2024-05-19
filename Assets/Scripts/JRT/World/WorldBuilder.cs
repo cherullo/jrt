@@ -6,6 +6,7 @@ using JRT.World.Light;
 
 using UnityEngine;
 using Unity.Collections;
+using System;
 
 namespace JRT.World
 {
@@ -44,6 +45,7 @@ namespace JRT.World
                 light.Index = index;
                 return light;
             }).ToArray();
+            _CalculateNormalizedAccumulatedPower(lightNodes);
 
             var geomNodes = geomComponents.Select((comp, index) =>
             {
@@ -64,6 +66,24 @@ namespace JRT.World
 
             _lightNodes = new NativeArray<LightNode>(lightNodes, Allocator.Persistent);
             _geometryNodes = new NativeArray<GeometryNode>(geomNodes, Allocator.Persistent);
+        }
+
+        private void _CalculateNormalizedAccumulatedPower(LightNode[] lightNodes)
+        {
+            float totalPower = lightNodes.Sum(n => n.Power);
+            if (totalPower <= 0.0f)
+                throw new Exception("Total light power in scene is zero.");
+
+            float acc = 0;
+            for(int i = 0; i < lightNodes.Length - 1; i++)
+            {
+                float normalizedPower = lightNodes[i].Power / totalPower;
+                acc += normalizedPower;
+                lightNodes[i].NormalizedAccumulatedPower = acc;
+            }
+            lightNodes[^1].NormalizedAccumulatedPower = 1.0f;
+
+            Debug.Log("Normalized Accumulated Power: " + string.Join(", ", lightNodes.Select(n => n.NormalizedAccumulatedPower.ToString())));
         }
 
         private void OnDestroy()

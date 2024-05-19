@@ -46,7 +46,7 @@ namespace JRT.Renderer
                         color += World.TraceRay(ray);
                         break;
                     case RenderType.PathTracing:
-                        color += World.TracePath(ray, 16);
+                        color += World.TracePath(ray, 10);
                         break;
                 }
             }

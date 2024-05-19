@@ -7,7 +7,7 @@ namespace JRT.World.Light
     public abstract class BaseLightNode : MonoBehaviour, ILight
     {
         public float Power = 10.0f;
-        public Color Color;
+        public Color Color = Color.white;
 
         public abstract Data.LightType GetLightType();
 
