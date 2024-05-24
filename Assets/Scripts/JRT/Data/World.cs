@@ -1,4 +1,3 @@
-using System;
 using Unity.Collections;
 using Unity.Mathematics;
 
@@ -18,11 +17,13 @@ namespace JRT.Data
         [ReadOnly]
         public NativeArray<LightNode> Lights;
 
+        public int MaxDepth;
+
         public int Depth;
 
-        public float3 TraceRay(Ray ray) 
+        public float3 TraceRay(Ray ray)
         {
-            if (Depth > 10)
+            if (Depth > MaxDepth) 
                 return 0;
 
             int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
@@ -42,12 +43,12 @@ namespace JRT.Data
             return ret;
         }
 
-        public float3 TracePath(Ray ray, int maxDepth)
+        public float3 TracePath(Ray ray)
         {
             float3 L = 0;
             float3 beta = 1;
 
-            for (int i = 0; i < maxDepth; i++)
+            for (int i = 0; i < MaxDepth; i++)
             {
                 int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
 

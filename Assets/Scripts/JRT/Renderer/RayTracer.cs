@@ -17,6 +17,9 @@ namespace JRT.Renderer
         public int blockHeight = 8;
 
         [SerializeField]
+        public int _maxDepth = 5;
+
+        [SerializeField]
         private RenderType _renderType;
 
         [SerializeField]
@@ -37,6 +40,7 @@ namespace JRT.Renderer
         {
             Data.World world = worldBuilder.BuildWorld();
             Data.Film film = filmAdapter.GetFilmData();
+            world.MaxDepth = _maxDepth;
 
             _stopwatch.Reset();
             _stopwatch.Start();
