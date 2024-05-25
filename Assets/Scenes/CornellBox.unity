@@ -2102,6 +2102,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockWidth: 16
   blockHeight: 16
+  _terminationProbabilities:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  _terminateBasedOnLuminance: 1
+  _maxDepth: 5
   _renderType: 1
   _film: {fileID: 2016730130}
   _worldBuilder: {fileID: 2016730127}
@@ -2150,7 +2163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sampleCount: 500
+  _sampleCount: 200
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

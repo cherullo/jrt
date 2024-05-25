@@ -1,4 +1,5 @@
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 
 using static Unity.Mathematics.math;
@@ -17,9 +18,14 @@ namespace JRT.Data
         [ReadOnly]
         public NativeArray<LightNode> Lights;
 
+        [ReadOnly]
+        public UnsafeList<float> TerminationProbabilities;
+
         public int MaxDepth;
 
         public int Depth;
+
+        public bool TerminateBasedOnLuminance;
 
         public float3 TraceRay(Ray ray)
         {
@@ -48,10 +54,13 @@ namespace JRT.Data
             float3 L = 0;
             float3 beta = 1;
 
-            for (int i = 0; i < MaxDepth; i++)
+            for (int i = 0; i < TerminationProbabilities.Length; i++)
             {
-                int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
+                float terminationProbability = _CalculateTerminationProbability(i, beta);
+                if (Random.float01 < terminationProbability)
+                    break;
 
+                int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
                 if (hitIndex == -1)
                     break;
 
@@ -75,7 +84,7 @@ namespace JRT.Data
 
                 float3 pointDiffuseColor = mat.GetDiffuseColor(hitPoint.TexCoords);
                 float3 BRDF = pointDiffuseColor * mat.GetBRDF(normal, pointToLightDir);
-                L += (Le * BRDF * beta);
+                L += (Le * BRDF * beta) / (1.0f - terminationProbability);
 
                 mat.GetHemisphereSample(ref Random, out float3 hemDirection, out float hemSampleProbability);
                 float3 newDirection = new Hemisphere(point, normal).ToGlobal(hemDirection);
@@ -85,6 +94,21 @@ namespace JRT.Data
             }
 
             return L;
+        }
+
+        private float _CalculateTerminationProbability(int depth, float3 beta)
+        {
+            float tableProbability = TerminationProbabilities[depth];
+
+            if (tableProbability == 0.0f)
+                return 0.0f;
+
+            if (TerminateBasedOnLuminance == true)
+            {
+                return max(tableProbability, 1.0f - beta.Luminance());
+            }
+
+            return tableProbability;
         }
 
         private void ChooseRandomLight(out int lightIndex, out float lightProbability)

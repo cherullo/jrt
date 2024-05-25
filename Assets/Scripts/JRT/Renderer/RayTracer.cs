@@ -8,6 +8,8 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using Unity.Collections.LowLevel.Unsafe;
+using JRT.Utils;
 
 namespace JRT.Renderer
 {
@@ -17,7 +19,13 @@ namespace JRT.Renderer
         public int blockHeight = 8;
 
         [SerializeField]
-        public int _maxDepth = 5;
+        private float[] _terminationProbabilities;
+
+        [SerializeField]
+        private bool _terminateBasedOnLuminance = true;
+
+        [SerializeField]
+        private int _maxDepth = 5;
 
         [SerializeField]
         private RenderType _renderType;
@@ -28,6 +36,7 @@ namespace JRT.Renderer
         [SerializeField]
         private WorldBuilder _worldBuilder;
 
+        private UnsafeList<float> _terminationProbabilitiesList;
         private List<(RenderBlockJob, JobHandle)> _jobs;
         private Stopwatch _stopwatch = new Stopwatch();
 
@@ -40,6 +49,10 @@ namespace JRT.Renderer
         {
             Data.World world = worldBuilder.BuildWorld();
             Data.Film film = filmAdapter.GetFilmData();
+
+            _terminationProbabilitiesList = _terminationProbabilities.ToUnsafeList();
+            world.TerminationProbabilities = _terminationProbabilitiesList;
+            world.TerminateBasedOnLuminance = _terminateBasedOnLuminance;
             world.MaxDepth = _maxDepth;
 
             _stopwatch.Reset();
@@ -158,6 +171,11 @@ namespace JRT.Renderer
                 _stopwatch.Stop();
                 Debug.Log($"Rendering finished after {_stopwatch.Elapsed.TotalSeconds}s");
             }
+        }
+
+        private void OnDestroy()
+        {
+            _terminationProbabilitiesList.Dispose();
         }
     }
 }
