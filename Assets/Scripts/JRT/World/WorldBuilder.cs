@@ -13,6 +13,7 @@ namespace JRT.World
     public class WorldBuilder : MonoBehaviour
     {
         [SerializeField]
+        [ColorUsage(false, true)]
         private Color _ambientLight;
 
         private NativeArray<GeometryNode> _geometryNodes;

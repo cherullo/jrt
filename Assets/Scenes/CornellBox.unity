@@ -2108,11 +2108,13 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  - 0.05
   - 0.1
   - 0.1
   - 0.1
   - 0.1
   - 0.1
+  - 0.2
   _terminateBasedOnLuminance: 1
   _maxDepth: 5
   _renderType: 1
@@ -2163,7 +2165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sampleCount: 200
+  _sampleCount: 500
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

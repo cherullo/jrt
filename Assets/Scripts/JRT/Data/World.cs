@@ -59,10 +59,14 @@ namespace JRT.Data
                 float terminationProbability = _CalculateTerminationProbability(i, beta);
                 if (Random.float01 < terminationProbability)
                     break;
+                beta /= (1.0f - terminationProbability);
 
                 int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
                 if (hitIndex == -1)
+                {
+                    L += beta * AmbientLight;
                     break;
+                }
 
                 if (Geometries[hitIndex].IsLightGeometry() == true)
                 {
@@ -84,7 +88,7 @@ namespace JRT.Data
 
                 float3 pointDiffuseColor = mat.GetDiffuseColor(hitPoint.TexCoords);
                 float3 BRDF = pointDiffuseColor * mat.GetBRDF(normal, pointToLightDir);
-                L += (Le * BRDF * beta) / (1.0f - terminationProbability);
+                L += (Le * BRDF * beta);// / (1.0f - terminationProbability);
 
                 mat.GetHemisphereSample(ref Random, out float3 hemDirection, out float hemSampleProbability);
                 float3 newDirection = new Hemisphere(point, normal).ToGlobal(hemDirection);
