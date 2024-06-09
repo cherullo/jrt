@@ -359,10 +359,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaterialType: 0
-  DiffuseColor: {r: 0, g: 1, b: 0, a: 1}
+  DiffuseColor: {r: 0, g: 0.603, b: 0, a: 1}
   SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   Shininess: 0.4
-  Reflectance: 0
+  Reflectance: 1
   Light: {fileID: 0}
 --- !u!23 &127249270
 MeshRenderer:
@@ -384,7 +384,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 273212928}
+  - {fileID: 2020047919}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -483,7 +483,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &192720119
 Transform:
   m_ObjectHideFlags: 0
@@ -616,42 +616,6 @@ MonoBehaviour:
   Shininess: 2
   Reflectance: 0
   Light: {fileID: 0}
---- !u!21 &273212928
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Default-Diffuse (Instance)
-  m_Shader: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Detail:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0, g: 1, b: 0, a: 1}
-  m_BuildTextureStacks: []
 --- !u!21 &296543830
 Material:
   serializedVersion: 8
@@ -2087,7 +2051,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d79199d6355eed341a2069312bea63d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ambientLight: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 0}
+  _ambientLight: {r: 0.3725054, g: 0.3725054, b: 0.3725054, a: 0}
 --- !u!114 &2016730128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2165,7 +2129,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sampleCount: 500
+  _sampleCount: 200
+--- !u!21 &2020047919
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Default-Diffuse (Instance) (Instance) (Instance) (Instance) (Instance)
+    (Instance) (Instance) (Instance)
+  m_Shader: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Detail:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0, g: 0.603, b: 0, a: 1}
+  m_BuildTextureStacks: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

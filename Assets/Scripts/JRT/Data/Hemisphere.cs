@@ -28,5 +28,10 @@ namespace JRT.Data
         {
             return normalize(mul(M, hemisphereDirection));
         }
+
+        public float3 ToLocal(float3 worldDirection)
+        {
+            return normalize(mul(worldDirection, M));
+        }
     }
 }

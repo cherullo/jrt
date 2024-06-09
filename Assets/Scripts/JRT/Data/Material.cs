@@ -76,9 +76,8 @@ namespace JRT.Data
             return DiffuseColor * DiffuseTexture.SampleColor(texCoords);
         }
 
-        public float3 GetBRDF(float3 normal, float3 pointToLightDir)
+        public float3 GetBRDF(float3 pointToLight, float3 normal, float3 pointToEye)
         {
-            // Diffuse
             return 1.0f / PI;
         }
 

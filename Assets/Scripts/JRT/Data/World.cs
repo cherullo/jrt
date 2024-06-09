@@ -53,6 +53,7 @@ namespace JRT.Data
         {
             float3 L = 0;
             float3 beta = 1;
+            bool acceptDirectLightHit = true;
 
             for (int i = 0; i < TerminationProbabilities.Length; i++)
             {
@@ -70,7 +71,7 @@ namespace JRT.Data
 
                 if (Geometries[hitIndex].IsLightGeometry() == true)
                 {
-                    if (i == 0) // First ray
+                    if (acceptDirectLightHit == true) // First ray
                         return CalculateDirectLightColor(ray, hitPoint, Geometries[hitIndex].LightIndex);
                     else
                         break;
@@ -80,21 +81,39 @@ namespace JRT.Data
                 float4 point = hitPoint.Point;
                 float3 normal = hitPoint.Normal;
 
-                ChooseRandomLight(out int lightIndex, out float lightProbability);
-                Lights[lightIndex].ChooseRandomSample(ref Random, out int sampleIndex, out float sampleProbability);
+                if (Random.float01 < mat.Reflectance)
+                { // Reflective
+                    beta *= mat.GetDiffuseColor(hitPoint.TexCoords);
 
-                float3 Le = Lights[lightIndex].CalculateRadiance(ref this, point, sampleIndex, out float3 pointToLightDir);
-                Le *= max(0, dot(normal, pointToLightDir)) / (lightProbability * sampleProbability);
+                    float3 newDirection = reflect(ray.Direction.xyz, normal);
 
-                float3 pointDiffuseColor = mat.GetDiffuseColor(hitPoint.TexCoords);
-                float3 BRDF = pointDiffuseColor * mat.GetBRDF(normal, pointToLightDir);
-                L += (Le * BRDF * beta);// / (1.0f - terminationProbability);
+                    ray = new Ray(point, newDirection);
+                    acceptDirectLightHit = true;
+                }
+                else
+                { // Diffuse
+                    ChooseRandomLight(out int lightIndex, out float lightProbability);
+                    Lights[lightIndex].ChooseRandomSample(ref Random, out int sampleIndex, out float sampleProbability);
 
-                mat.GetHemisphereSample(ref Random, out float3 hemDirection, out float hemSampleProbability);
-                float3 newDirection = new Hemisphere(point, normal).ToGlobal(hemDirection);
-                beta *= pointDiffuseColor * mat.GetBRDF(normal, newDirection) * max(0, dot(normal, newDirection)) / hemSampleProbability;
+                    float3 Le = Lights[lightIndex].CalculateRadiance(ref this, point, sampleIndex, out float3 pointToLightDir);
+                    Le *= max(0, dot(normal, pointToLightDir)) / (lightProbability * sampleProbability);
 
-                ray = new Ray(point, newDirection);
+                    float3 pointDiffuseColor = mat.GetDiffuseColor(hitPoint.TexCoords);
+                    float3 BRDF = pointDiffuseColor * mat.GetBRDF(pointToLightDir, normal, -ray.Direction.xyz);
+                    L += (Le * BRDF * beta);
+
+                    float hemSampleProbability;
+                    float3 hemDirection;
+                    do {
+                        mat.GetHemisphereSample(ref Random, out hemDirection, out hemSampleProbability);
+                    } while(hemSampleProbability < 0.005f); // Avoid salt spray
+
+                    float3 newDirection = new Hemisphere(point, normal).ToGlobal(hemDirection);
+                    beta *= pointDiffuseColor * mat.GetBRDF(newDirection, normal, -ray.Direction.xyz) * max(0, dot(normal, newDirection)) / hemSampleProbability;
+
+                    ray = new Ray(point, newDirection);
+                    acceptDirectLightHit = false;
+                }
             }
 
             return L;
