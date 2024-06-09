@@ -7,6 +7,7 @@ using JRT.World.Light;
 using UnityEngine;
 using Unity.Collections;
 using System;
+using Unity.Mathematics;
 
 namespace JRT.World
 {
@@ -16,13 +17,16 @@ namespace JRT.World
         [ColorUsage(false, true)]
         private Color _ambientLight;
 
+        [SerializeField]
+        private float _ambientPower;
+
         private NativeArray<GeometryNode> _geometryNodes;
         private NativeArray<LightNode> _lightNodes;
 
         public Data.World BuildWorld()
         {
             Data.World ret = new Data.World();
-            ret.AmbientLight = _ambientLight.ToFloat3();
+            ret.AmbientLight = (_ambientLight * _ambientPower).ToFloat3();
 
             if ((_lightNodes.IsCreated == true) || (_geometryNodes.IsCreated == true))
                 OnDestroy();
@@ -40,12 +44,27 @@ namespace JRT.World
             var lightComponents = FindObjectsOfType<BaseLightNode>(false).ToList();
             var geomComponents = FindObjectsOfType<BaseGeometryNode>(false);
 
-            var lightNodes = lightComponents.Select((node, index) =>
+            var lightNodesList = lightComponents.Select((node, index) =>
             {
                 LightNode light = node.GetNodeData();
                 light.Index = index;
                 return light;
-            }).ToArray();
+            });
+
+            if (_ambientPower > 0)
+            {
+                lightNodesList = lightNodesList.Append(new LightNode()
+                {
+                    Index = lightNodesList.Count(),
+                    Color = _ambientLight.ToFloat3(),
+                    LocalToWorld = float4x4.identity,
+                    Power = _ambientPower,
+                    Type = Data.LightType.AmbientLight                    
+                });
+            }
+
+            var lightNodes = lightNodesList.ToArray();
+
             _CalculateNormalizedAccumulatedPower(lightNodes);
 
             var geomNodes = geomComponents.Select((comp, index) =>

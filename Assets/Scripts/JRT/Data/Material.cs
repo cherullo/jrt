@@ -59,7 +59,7 @@ namespace JRT.Data
                 int sampleCount = light.GetSampleCount();
                 for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
                 {
-                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, sampleIndex, out float3 pointToLightDir);
+                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, hitPoint.Normal, sampleIndex, out float3 pointToLightDir);
 
                     float3 reflect = math.reflect(-pointToLightDir, hitPoint.Normal);
 

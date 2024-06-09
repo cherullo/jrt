@@ -65,14 +65,15 @@ namespace JRT.Data
                 int hitIndex = ComputeIntersection(ray, out HitPoint hitPoint);
                 if (hitIndex == -1)
                 {
-                    L += beta * AmbientLight;
+                    if (acceptDirectLightHit)
+                        return beta * AmbientLight;
                     break;
                 }
 
                 if (Geometries[hitIndex].IsLightGeometry() == true)
                 {
-                    if (acceptDirectLightHit == true) // First ray
-                        return CalculateDirectLightColor(ray, hitPoint, Geometries[hitIndex].LightIndex);
+                    if (acceptDirectLightHit == true) // First ray or reflection
+                        return beta * CalculateDirectLightColor(ray, hitPoint, Geometries[hitIndex].LightIndex);
                     else
                         break;
                 }
@@ -95,7 +96,7 @@ namespace JRT.Data
                     ChooseRandomLight(out int lightIndex, out float lightProbability);
                     Lights[lightIndex].ChooseRandomSample(ref Random, out int sampleIndex, out float sampleProbability);
 
-                    float3 Le = Lights[lightIndex].CalculateRadiance(ref this, point, sampleIndex, out float3 pointToLightDir);
+                    float3 Le = Lights[lightIndex].CalculateRadiance(ref this, point, normal, sampleIndex, out float3 pointToLightDir);
                     Le *= max(0, dot(normal, pointToLightDir)) / (lightProbability * sampleProbability);
 
                     float3 pointDiffuseColor = mat.GetDiffuseColor(hitPoint.TexCoords);

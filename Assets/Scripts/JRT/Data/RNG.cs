@@ -1,4 +1,3 @@
-using System;
 using Unity.Mathematics;
 
 namespace JRT.Data
@@ -36,6 +35,24 @@ namespace JRT.Data
             get
             {
                 return new float2(float01, float01);
+            }
+        }
+
+        public float3 UnitSphere
+        {
+            get
+            {
+                float u = float01;
+                float v = float01;
+
+                float phi = math.acos(1 - 2 * u);
+                float theta = v * 2 * math.PI;
+
+                return new float3(
+                    math.cos(theta) * math.sin(phi),
+                    math.cos(phi),
+                    math.sin(theta) * math.sin(phi)
+                    );
             }
         }
 

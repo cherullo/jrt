@@ -5,6 +5,7 @@ namespace JRT.Data
     {
         Undefined = 0,
         PointLight = 1,
-        AreaLight = 2
+        AreaLight = 2,
+        AmbientLight = 3
     }
 }
