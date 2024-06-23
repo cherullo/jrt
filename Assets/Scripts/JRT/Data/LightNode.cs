@@ -52,7 +52,7 @@ namespace JRT.Data
             if (world.Geometries[hitIndex].LightIndex == Index)
             {
                 float lightIncidenceDecay = max(0.0f, dot(-pointToLightDir, lightDirection));
-                return Color * ((SampleArea * lightIncidenceDecay * Power) / (distance * distance));
+                return (Color * (1.0f / (SampleArea * Sampler.SampleCount)) * lightIncidenceDecay * Power) / (distance * distance);
             }
             else
                 return 0.0f;
@@ -106,10 +106,7 @@ namespace JRT.Data
                     else
                     {
                         sampleIndex = 0;
-
-                        // Deveria ser 1 / Area = 1 / (SampleCount * SampleArea)
-                        // Mas já estamos multiplicando a radiancia por SampleArea na função CalculateRadiance
-                        sampleProbability = 1.0f / (Sampler.SampleCount);
+                        sampleProbability = 1.0f / (Sampler.SampleCount * SampleArea);
                     }
                     break;
                 case LightType.AmbientLight:

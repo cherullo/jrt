@@ -86,9 +86,9 @@ namespace JRT.Data
             float xi1 = random.float01;
             float xi2 = random.float01;
 
-            hemDirection.x = cos(2 * PI * xi2) * sqrt(xi1);
-            hemDirection.y = sin(2 * PI * xi2) * sqrt(xi1);
-            hemDirection.z = sqrt(1 - xi1);
+            hemDirection.x = cos(2.0f * PI * xi2) * sqrt(xi1);
+            hemDirection.y = sin(2.0f * PI * xi2) * sqrt(xi1);
+            hemDirection.z = sqrt(1.0f - xi1);
 
             sampleProbability = hemDirection.z / PI;
         }

@@ -51,7 +51,7 @@ namespace JRT.World
                 return light;
             });
 
-            if (_ambientPower > 0)
+            if (_ambientPower > 0.0f)
             {
                 lightNodesList = lightNodesList.Append(new LightNode()
                 {

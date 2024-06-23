@@ -1715,11 +1715,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1580447090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5c0110feef98cf4dac467f91dcb8385, type: 3}
+  m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rows: 4
-  _columns: 4
+  _sampleCount: 1
 --- !u!21 &1798321173
 Material:
   serializedVersion: 8
@@ -2052,6 +2051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ambientLight: {r: 0.3725054, g: 0.3725054, b: 0.3725054, a: 0}
+  _ambientPower: 0
 --- !u!114 &2016730128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2096,7 +2096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133ae5f9c123f748bb73cd7f4ea5d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resolutionScale: 1
+  _resolutionScale: 0.2
 --- !u!1183024399 &2016730131
 LookAtConstraint:
   m_ObjectHideFlags: 0
@@ -2129,7 +2129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sampleCount: 200
+  _sampleCount: 16
 --- !u!21 &2020047919
 Material:
   serializedVersion: 8
