@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &138446745
 Light:
   m_ObjectHideFlags: 0
@@ -1152,7 +1152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1214576249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1178,8 +1178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65dbe86c41cc55d428b1c8dcdc7dc73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Power: 30
-  Color: {r: 1, g: 1, b: 1, a: 1}
+  Power: 50
+  Color: {r: 0, g: 1, b: 0.27884626, a: 1}
 --- !u!114 &1214576251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1277,13 +1277,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214576248}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6532815, y: 0.6532815, z: -0.27059805, w: 0.27059805}
-  m_LocalPosition: {x: 0, y: 2.896, z: 3.477}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.2}
+  m_LocalRotation: {x: 0.7071068, y: 0.7071068, z: 0, w: 0}
+  m_LocalPosition: {x: -0.007, y: 1.491, z: 3.483}
+  m_LocalScale: {x: 6, y: 6, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 45, y: 180, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 90}
 --- !u!21 &1245657155
 Material:
   serializedVersion: 8
@@ -1494,15 +1494,9 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
   _terminateBasedOnLuminance: 0
-  _maxDepth: 10
-  _useMIS: 1
+  _maxDepth: 4
+  _useMIS: 0
   _renderType: 1
   _film: {fileID: 1416236879}
   _worldBuilder: {fileID: 1416236878}
@@ -1518,8 +1512,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d79199d6355eed341a2069312bea63d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ambientLight: {r: 0.054467764, g: 0.06911382, b: 1.283019, a: 0}
-  _ambientPower: 0
+  _ambientLight: {r: 0, g: 1.9999999, b: 0, a: 0}
+  _ambientPower: 0.5
 --- !u!114 &1416236879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1532,7 +1526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133ae5f9c123f748bb73cd7f4ea5d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resolutionScale: 0.25
+  _resolutionScale: 1
 --- !u!114 &1416236880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1545,7 +1539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sampleCount: 500
+  _sampleCount: 50
 --- !u!21 &1535288496
 Material:
   serializedVersion: 8

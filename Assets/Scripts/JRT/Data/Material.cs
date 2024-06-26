@@ -59,11 +59,11 @@ namespace JRT.Data
                 int sampleCount = light.GetSampleCount();
                 for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
                 {
-                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, hitPoint.Normal, sampleIndex, out float3 pointToLightDir);
+                    float3 L = light.CalculateRadiance(ref world, hitPoint.Point, hitPoint.Normal, sampleIndex, out float4 lightPoint, out float3 lightDir);
 
-                    float3 reflect = math.reflect(-pointToLightDir, hitPoint.Normal);
+                    float3 reflect = math.reflect(normalize((lightPoint - hitPoint.Point).xyz), hitPoint.Normal);
 
-                    color += L * (diffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, pointToLightDir))
+                    color += L * (diffuseColor * math.max(0.0f, math.dot(hitPoint.Normal, lightDir))
                                   + SpecularColor * math.pow(math.max(0.0f, math.dot(reflect, pointToEyeDir.xyz)), Shininess));
                 }
             }
@@ -81,16 +81,29 @@ namespace JRT.Data
             return 1.0f / PI;
         }
 
+        public float GetDirectionPDF(float3 direction)
+        {
+            return direction.z / PI;
+        }
+
+        public float GetDirectionPDF(float3 normal, float3 direction)
+        {
+            return max(0.0f, dot(normal, direction)) / PI;
+        }
+
         public void GetHemisphereSample(ref RNG random, out float3 hemDirection, out float sampleProbability)
         {
-            float xi1 = random.float01;
-            float xi2 = random.float01;
+            do
+            {
+                float xi1 = random.float01;
+                float xi2 = random.float01;
 
-            hemDirection.x = cos(2.0f * PI * xi2) * sqrt(xi1);
-            hemDirection.y = sin(2.0f * PI * xi2) * sqrt(xi1);
-            hemDirection.z = sqrt(1.0f - xi1);
+                hemDirection.x = cos(2.0f * PI * xi2) * sqrt(xi1);
+                hemDirection.y = sin(2.0f * PI * xi2) * sqrt(xi1);
+                hemDirection.z = sqrt(1.0f - xi1);
 
-            sampleProbability = hemDirection.z / PI;
+                sampleProbability = hemDirection.z / PI;
+            } while (sampleProbability < 0.005f); // Avoid salt spray
         }
 
         public void Dispose()

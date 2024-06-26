@@ -35,12 +35,13 @@ namespace JRT.Data
             }
         }
 
-        public float3 CalculateRadiance(ref World world, float4 point, float3 normal, int sampleIndex, out float3 pointToLightDir)
+        public float3 CalculateRadiance(ref World world, float4 point, float3 normal, int sampleIndex, out float4 lightPoint, out float3 lightDirection)
         {
-            float4 samplePosition = _GetSample(ref world.Random, sampleIndex, point, normal, out float3 lightDirection);
-            float4 pointToLight = samplePosition - point;
+            lightPoint = _GetSample(ref world.Random, sampleIndex, point, normal, out lightDirection);
+            
+            float4 pointToLight = lightPoint - point;
             float distance = length(pointToLight.xyz);
-            pointToLightDir = pointToLight.xyz / distance;
+            float3 pointToLightDir = pointToLight.xyz / distance;
 
             Ray toLight = new Ray(point, pointToLightDir);
             int hitIndex = world.ComputeIntersection(toLight, out HitPoint auxHit);
@@ -48,7 +49,6 @@ namespace JRT.Data
             if (hitIndex == -1)
                 return (Type == LightType.AmbientLight) ? Color * Power : 0;
 
-            // TODO: Check if geometry hit is behind light.
             if (world.Geometries[hitIndex].LightIndex == Index)
             {
                 float lightIncidenceDecay = max(0.0f, dot(-pointToLightDir, lightDirection));
@@ -77,12 +77,29 @@ namespace JRT.Data
                 case LightType.AmbientLight:
                     lightDirection = Random.UnitSphere;
 
-                    //if (lightDirection.z < 0)
-                    //    lightDirection.z *= -1.0f;
+                    if (lightDirection.z < 0)
+                        lightDirection.z *= -1.0f;
 
-                    //lightDirection = new Hemisphere(point, normal).ToGlobal(-lightDirection);
+                    lightDirection = new Hemisphere(point, normal).ToGlobal(-lightDirection);
 
                     return point - float4(lightDirection, 0);
+            }
+        }
+
+        public float3 GetLightDirection(float4 point)
+        {
+            switch (Type)
+            {
+                default:
+                case LightType.Undefined:
+                case LightType.PointLight:
+                    return normalize((point - LocalToWorld.c3).xyz);
+
+                case LightType.AreaLight:
+                    return normalize(LocalToWorld.c2.xyz);
+
+                case LightType.AmbientLight:
+                    return 0;
             }
         }
 
@@ -111,8 +128,8 @@ namespace JRT.Data
                     break;
                 case LightType.AmbientLight:
                     sampleIndex = 0;
-                    sampleProbability = 1.0f / (4.0f * PI);
-                    //sampleProbability = 1.0f / (2.0f * PI);
+                    //sampleProbability = 1.0f / (4.0f * PI);
+                    sampleProbability = 1.0f / (2.0f * PI);
                     break;
             }
         }

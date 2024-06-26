@@ -28,6 +28,9 @@ namespace JRT.Renderer
         private int _maxDepth = 5;
 
         [SerializeField]
+        private bool _useMIS;
+
+        [SerializeField]
         private RenderType _renderType;
 
         [SerializeField]
@@ -54,6 +57,7 @@ namespace JRT.Renderer
             world.TerminationProbabilities = _terminationProbabilitiesList;
             world.TerminateBasedOnLuminance = _terminateBasedOnLuminance;
             world.MaxDepth = _maxDepth;
+            world.UseMIS = _useMIS;
 
             _stopwatch.Reset();
             _stopwatch.Start();
