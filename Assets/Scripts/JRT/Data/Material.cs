@@ -1,6 +1,9 @@
+using System.Drawing;
+using System;
 using Unity.Mathematics;
 
 using static Unity.Mathematics.math;
+using UnityEngine;
 
 namespace JRT.Data
 {
@@ -100,6 +103,37 @@ namespace JRT.Data
         public float GetDirectionPDF(float3 normal, float3 direction)
         {
             return max(0.0f, dot(normal, direction)) / PI;
+        }
+
+        public void GetDirectionSample(ref RNG random, float4 point, float3 normal, float3 pointToEye, out float3 direction, out float probability)
+        {
+            float3 hemDirection;
+            switch (Type)
+            {
+                default:
+                case MaterialType.Phong:
+                case MaterialType.ReflectivePhong:
+                case MaterialType.Uniform:
+                    GetHemisphereSample(ref random, out hemDirection, out probability);
+                    direction = new Hemisphere(point, normal).ToGlobal(hemDirection);
+                    break;
+                case MaterialType.Microfacet:
+                    float3 reflected = reflect(-pointToEye, normal);
+                    Hemisphere hemisphere = new Hemisphere(point, reflected);
+
+                    do
+                    {
+                        GetHemisphereSample(ref random, out hemDirection, out probability);
+
+                        hemDirection.xy *= MicrofacetData.Roughness;
+                        hemDirection = normalize(hemDirection);
+
+                        direction = hemisphere.ToGlobal(hemDirection);
+                    } while (dot(direction, normal) < 0.0f);
+
+                    break;
+                
+            }
         }
 
         public void GetHemisphereSample(ref RNG random, out float3 hemDirection, out float sampleProbability)

@@ -120,16 +120,12 @@ namespace JRT.Data
 
                 if (UseMIS == true)
                 {
-                    mat.GetHemisphereSample(ref Random, out float3 matDirection, out float matSampleProbability);
-                    float3 matSampleDirection = new Hemisphere(point, normal).ToGlobal(matDirection);
-                    // Cos-weighted light sampling using MIS
-                    //float matSampleProbability = 1.0f;
-                    //float3 matSampleDirection = normalize(reflect(ray.Direction.xyz, normal));
+                    mat.GetDirectionSample(ref Random, point, normal, -ray.Direction.xyz, out float3 matSampleDirection, out float matSampleProbability);
 
                     int sampleHitIndex = ComputeIntersection(new Ray(point, matSampleDirection), out HitPoint matHitPoint);
                     if (sampleHitIndex < 0)
                     {
-                        L += beta * AmbientLight; // * weight??
+                        L += beta * AmbientLight; // BRDF?? weight??
                     }
                     else if (Geometries[sampleHitIndex].IsLightGeometry() == true)
                     {
@@ -153,29 +149,9 @@ namespace JRT.Data
                 }
 
                 // Create new direction for path
-                
+                mat.GetDirectionSample(ref Random, point, normal, -ray.Direction.xyz, out float3 newDirection, out sampleProbability);
 
-                float3 newDirection;
-                float3 rout = reflect(ray.Direction.xyz, normal);
-                float hemSampleProbability;
-                do
-                {
-                    mat.GetHemisphereSample(ref Random, out float3 hemDirection, out hemSampleProbability);
-
-                    if (mat.Type == MaterialType.Microfacet)
-                    {
-                        hemDirection.xy = hemDirection.xy * mat.MicrofacetData.Roughness;
-                        hemDirection = normalize(hemDirection);
-                    }
-
-                    newDirection = new Hemisphere(point, rout).ToGlobal(hemDirection);
-                } while (dot(newDirection, normal) < 0.05f);
-                //hemSampleProbability = dot(normal, rout);
-                //newDirection = rout;
-
-                // float3 newDirection = new Hemisphere(point, normal).ToGlobal(hemDirection);
-                beta *= mat.GetBRDF(pointDiffuseColor, newDirection, normal, -ray.Direction.xyz) * max(0, dot(normal, newDirection)) / hemSampleProbability;
-                //beta *= mat.GetBRDF(pointDiffuseColor, pointToLightDir, normal, -ray.Direction.xyz) * max(0, dot(normal, newDirection)) / hemSampleProbability;
+                beta *= mat.GetBRDF(pointDiffuseColor, newDirection, normal, -ray.Direction.xyz) * max(0, dot(normal, newDirection)) / sampleProbability;
 
                 ray = new Ray(point, newDirection);
                 acceptDirectLightHit = false;
