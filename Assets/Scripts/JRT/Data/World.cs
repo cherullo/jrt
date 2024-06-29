@@ -125,7 +125,7 @@ namespace JRT.Data
                     int sampleHitIndex = ComputeIntersection(new Ray(point, matSampleDirection), out HitPoint matHitPoint);
                     if (sampleHitIndex < 0)
                     {
-                        L += beta * AmbientLight; // BRDF?? weight??
+                    //    L += beta * AmbientLight; // BRDF?? weight??
                     }
                     else if (Geometries[sampleHitIndex].IsLightGeometry() == true)
                     {
@@ -144,7 +144,7 @@ namespace JRT.Data
 
                         BRDF = mat.GetBRDF(pointDiffuseColor, matSampleDirection, normal, -ray.Direction.xyz);
 
-                        L += beta * BRDF *  mis_weight * Le / matSampleProbability;
+                        L += beta * BRDF * mis_weight * Le / matSampleProbability;
                     }
                 }
 

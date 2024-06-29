@@ -2414,12 +2414,24 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  - 0.1
-  - 0.1
-  - 0.2
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   _terminateBasedOnLuminance: 0
-  _maxDepth: 5
-  _useMIS: 0
+  _maxDepth: 20
+  _useMIS: 1
   _renderType: 1
   _film: {fileID: 2016730130}
   _worldBuilder: {fileID: 2016730127}
@@ -2435,7 +2447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6133ae5f9c123f748bb73cd7f4ea5d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resolutionScale: 0.5
+  _resolutionScale: 1
 --- !u!1183024399 &2016730131
 LookAtConstraint:
   m_ObjectHideFlags: 0
@@ -2468,7 +2480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af13c9438b85d5a4da51bb9358c8844b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sampleCount: 400
+  _sampleCount: 4000
 --- !u!21 &2081034469
 Material:
   serializedVersion: 8
