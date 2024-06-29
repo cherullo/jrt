@@ -14,7 +14,7 @@ namespace JRT.World.Node
         public Color SpecularColor = Color.white;
         public float Shininess = 1.0f;
         public float Reflectance = 0.0f;
-
+        public MicrofacetData MicrofacetData;
         public BaseLightNode Light;
 
         private UnsafeList<Color> _diffuseColor;
@@ -38,6 +38,7 @@ namespace JRT.World.Node
             ret.Material.Shininess = Shininess;
             ret.Material.Reflectance = Reflectance;
             ret.Material.DiffuseTexture = _GetDiffuseTexture();
+            ret.Material.MicrofacetData = MicrofacetData;
 
             return ret;
         }

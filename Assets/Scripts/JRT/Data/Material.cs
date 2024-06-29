@@ -12,6 +12,7 @@ namespace JRT.Data
         public float Shininess;
         public float Reflectance;
         public Texture DiffuseTexture;
+        public MicrofacetData MicrofacetData;
 
         public float3 CalculateColor(ref World world, Ray ray, HitPoint hitPoint)
         {
@@ -76,9 +77,19 @@ namespace JRT.Data
             return DiffuseColor * DiffuseTexture.SampleColor(texCoords);
         }
 
-        public float3 GetBRDF(float3 pointToLight, float3 normal, float3 pointToEye)
+        public float3 GetBRDF(float3 albedo, float3 pointToLight, float3 normal, float3 pointToEye)
         {
-            return 1.0f / PI;
+            switch (Type)
+            {
+                default:
+                case MaterialType.Phong:
+                case MaterialType.ReflectivePhong:
+                case MaterialType.Uniform:
+                    return albedo / PI;
+
+                case MaterialType.Microfacet:
+                    return MicrofacetData.BRDF(albedo, pointToLight, normal, pointToEye);
+            }
         }
 
         public float GetDirectionPDF(float3 direction)
