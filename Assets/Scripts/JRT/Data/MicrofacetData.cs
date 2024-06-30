@@ -11,27 +11,34 @@ namespace JRT.Data
         public float3 F_zero;
         public bool Metallic;
         public float Roughness;
+        public float Reflectance;
 
         public float3 BRDF(float3 albedo, float3 pointToLightDir, float3 normal, float3 pointToViewDir)
         {
             pointToLightDir = normalize(pointToLightDir);
             pointToViewDir = normalize(pointToViewDir);
+
+            float3 f_zero = F_zero;
             if (Metallic)
             {
                 albedo = 0.0f;
+            }
+            else
+            {
+                f_zero = Reflectance;
             }
 
             float dot_normal_view = max(0, dot(normal, pointToViewDir));
             float dot_normal_light = max(0, dot(normal, pointToLightDir));
 
-            if ((dot_normal_view < 0.05) || (dot_normal_light < 0.05f))
+            if ((dot_normal_view < 0.01) || (dot_normal_light < 0.01f))
             {
                 return albedo / PI;
             }
 
             float3 halfVector = normalize(pointToViewDir + pointToLightDir);
 
-            float3 F_Schlick = F_zero + (1.0f - F_zero) * pow(1.0f - max(0, dot(pointToViewDir, halfVector)), 5.0f);
+            float3 F_Schlick = f_zero + (1.0f - f_zero) * pow(1.0f - max(0, dot(pointToViewDir, halfVector)), 5.0f);
 
             float alpha = Roughness * Roughness;
             float alpha2 = alpha * alpha;
@@ -43,7 +50,10 @@ namespace JRT.Data
             float G_Schlick_view = dot_normal_view / (dot_normal_view * (1.0f - k) + k);
             float G_Schlick_light = dot_normal_light / (dot_normal_light * (1.0f - k) + k);
 
-            float3 ret = (albedo / PI) + (F_Schlick * D_GGX * G_Schlick_view * G_Schlick_light) / (4.0f * dot_normal_view * dot_normal_light);
+            float3 ret = (F_Schlick * D_GGX * G_Schlick_view * G_Schlick_light) / (4.0f * dot_normal_view * dot_normal_light);
+
+            if (Metallic == false)
+                ret = (1.0f - F_Schlick) * (albedo / PI) + ret;
 
             return  math.min(1.0f, ret);
         }

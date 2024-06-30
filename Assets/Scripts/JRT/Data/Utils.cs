@@ -15,7 +15,7 @@ namespace JRT.Data
             float3 lightToPoint = (point - lightPoint).xyz;
             float distance = length(lightToPoint);
 
-            return max(0.0f, dot(lightToPoint, lightDirection)) / (0.001f + distance * distance * distance);
+            return max(0.0f, dot(lightToPoint, lightDirection)) / (0.001f + distance * distance);
                 
         }
     }

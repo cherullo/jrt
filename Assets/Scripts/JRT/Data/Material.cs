@@ -121,7 +121,9 @@ namespace JRT.Data
                     float3 reflected = reflect(-pointToEye, normal);
                     Hemisphere hemisphere = new Hemisphere(point, reflected);
 
-                    do
+                    direction = reflected;
+                    probability = 1;
+                    for (int i = 0; i < 20; i++)
                     {
                         GetHemisphereSample(ref random, out hemDirection, out probability);
 
@@ -129,7 +131,9 @@ namespace JRT.Data
                         hemDirection = normalize(hemDirection);
 
                         direction = hemisphere.ToGlobal(hemDirection);
-                    } while (dot(direction, normal) < 0.0f);
+                        if (dot(direction, normal) > 0.0f)
+                            break;
+                    } 
 
                     break;
                 
