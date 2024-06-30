@@ -57,5 +57,16 @@ namespace JRT.Data
 
             return  math.min(1.0f, ret);
         }
+
+        public float3 F_Schlick(float3 pointToViewDir, float3 halfVector)
+        {
+            float3 f_zero = F_zero;
+            if (Metallic == false)
+            {
+                f_zero = Reflectance;
+            }
+
+            return f_zero + (1.0f - f_zero) * pow(1.0f - max(0, dot(pointToViewDir, halfVector)), 5.0f);
+        }
     }
 }

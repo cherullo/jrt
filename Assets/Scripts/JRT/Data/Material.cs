@@ -118,6 +118,25 @@ namespace JRT.Data
                     direction = new Hemisphere(point, normal).ToGlobal(hemDirection);
                     break;
                 case MaterialType.Microfacet:
+                    float f_probability = 1.0f;
+
+                    if (MicrofacetData.Metallic == false)
+                    {
+                        float F_Schlick = MicrofacetData.F_Schlick(pointToEye, normal).x;
+
+                        if ((F_Schlick < 0.01f) || (random.float01 > F_Schlick)) // Transmission
+                        {
+                            GetHemisphereSample(ref random, out hemDirection, out probability);
+                            direction = new Hemisphere(point, normal).ToGlobal(hemDirection);
+                            f_probability = (1.0f - F_Schlick);
+                            probability *= f_probability;
+                            return;
+                        }
+
+                        f_probability = F_Schlick;
+                    }
+
+                    // Reflection
                     float3 reflected = reflect(-pointToEye, normal);
                     Hemisphere hemisphere = new Hemisphere(point, reflected);
 
@@ -133,7 +152,8 @@ namespace JRT.Data
                         direction = hemisphere.ToGlobal(hemDirection);
                         if (dot(direction, normal) > 0.0f)
                             break;
-                    } 
+                    }
+                    probability *= f_probability;
 
                     break;
                 
@@ -152,7 +172,7 @@ namespace JRT.Data
                 hemDirection.z = sqrt(1.0f - xi1);
 
                 sampleProbability = hemDirection.z / PI;
-            } while (sampleProbability < 0.005f); // Avoid salt spray
+            } while (sampleProbability < 0.01f); // Avoid salt spray
         }
 
         public void Dispose()
